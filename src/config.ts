@@ -8,7 +8,8 @@ class Config {
         // requestLimitSize: "10mb"
     };
     postgresql = {
-        restPort: process.env.POSTGRESQL_HOST,
+        port: Number(process.env.POSTGRESQL_PORT),
+        host: process.env.POSTGRESQL_HOST,
         db: process.env.POSTGRESQL_DB,
         user: process.env.POSTGRESQL_USERNAME,
         password: process.env.POSTGRESQL_PASSWORD
@@ -29,9 +30,6 @@ class Config {
     //         updateEventRoutingKey: "orders.event.update"
     //     }
     // };
-    mongodb = {
-        url: process.env.MONGODB_URL
-    };
     logLevel: string = process.env.LOG_LEVEL || "info";
 }
 
