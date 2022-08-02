@@ -1,12 +1,12 @@
-import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
+import { forwardRef, Module } from "@nestjs/common";
+// import { AppController } from "./app.controller";
+// import { AppService } from "./app.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import Config from "./config";
 import * as path from "path";
 import { Question } from "src/modules/question/question.entity";
-// import { QuestionController } from "./modules/question/question.controller";
 import { QuestionModule } from "./modules/question/question.module";
+// import ormconfig from "src/ormconfig";
 
 @Module({
     imports: [
@@ -18,12 +18,19 @@ import { QuestionModule } from "./modules/question/question.module";
             password: Config.postgresql.password,
             database: Config.postgresql.db,
             synchronize: true,
-            // logging: true,
-            // logger: "advanced-console",
-            // entities: [path.join(__dirname, "**", "*.tableFields.{ts, js}")]
-            entities: [Question],
+
+            logging: true,
+            logger: "advanced-console",
+
+            entities: ["dist/**/*.entity{ .ts,.js}"], // entities: [Question],
+
+            migrationsTableName: "student_migration_table",
+            migrations: ["src/migration/*{.ts,.js}"],
+            migrationsRun: true,
             autoLoadEntities: true
         }),
+        // forwardRef(() => QuestionModule),
+        // TypeOrmModule.forFeature([QuestionModule])
         QuestionModule
     ]
     // controllers: [AppController],

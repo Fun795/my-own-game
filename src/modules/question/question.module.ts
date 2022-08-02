@@ -1,11 +1,13 @@
-import { Global, Module } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { QuestionService } from "./question.service";
 import { QuestionController } from "./question.controller";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { Question } from "./question.entity";
 
-@Global()
 @Module({
+    imports: [TypeOrmModule.forFeature([Question])],
     controllers: [QuestionController],
     providers: [QuestionService],
-    exports: [QuestionService]
+    exports: [TypeOrmModule]
 })
 export class QuestionModule {}
