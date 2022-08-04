@@ -16,7 +16,7 @@ export class QuestionService {
     }
 
     findOne(id: number): Promise<Question> {
-        return this.questionRepository.findOneBy({ id });
+        return this.questionRepository.findOne({ id });
     }
 
     async remove(id: number): Promise<number> {
