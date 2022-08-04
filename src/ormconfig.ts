@@ -1,5 +1,4 @@
 import Config from "./config";
-import { Question } from "./modules/question/question.entity";
 import { ConnectionOptions } from "typeorm";
 
 const ormconfig: ConnectionOptions = {
