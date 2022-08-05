@@ -1,7 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
-import { DeleteResult, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { Question } from "./question.entity";
 import { QuestionDtoCreate } from "./question.entityDto";
 

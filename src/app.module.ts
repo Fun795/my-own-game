@@ -3,11 +3,12 @@ import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 // import { AppService } from "./app.service";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { QuestionModule } from "./modules/question/question.module";
 import ormconfig from "src/ormconfig";
 import { LoggerModule } from "nestjs-pino";
 import { LoggerMiddleware } from "./common/middleware/logger.middleware";
 import config from "./config";
+import { QuestionModule } from "./modules/question/question.module";
+import { EventsModule } from "./modules/events/events.module";
 
 @Module({
     imports: [
@@ -26,6 +27,7 @@ import config from "./config";
                 }
             }
         }),
+        EventsModule,
         QuestionModule
     ]
     // controllers: [AppController],

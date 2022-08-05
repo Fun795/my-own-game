@@ -15,21 +15,21 @@ class Config {
         password: process.env.POSTGRESQL_PASSWORD
         // requestLimitSize: "10mb"
     };
-    // amqpConfig = {
-    //     host: process.env.AMQP_HOST,
-    //     port: process.env.AMQP_PORT,
-    //     username: process.env.AMQP_USERNAME,
-    //     password: process.env.AMQP_PASSWORD,
-    //     url: process.env.AMQP_URL,
-    //
-    //     ordersEvents: {
-    //         exchange: "lmru.bpms.ved:orders",
-    //         createPublication: "orders_create",
-    //         createEventRoutingKey: "orders.event.create",
-    //         updatePublication: "orders_update",
-    //         updateEventRoutingKey: "orders.event.update"
-    //     }
-    // };
+    amqpConfig = {
+        host: process.env.AMQP_HOST,
+        port: process.env.AMQP_PORT,
+        username: process.env.AMQP_USERNAME,
+        password: process.env.AMQP_PASSWORD,
+        url: process.env.AMQP_URL,
+
+        questionEvents: {
+            exchange: "lmru.bpms.ved:orders",
+            createPublication: "orders_create",
+            createEventRoutingKey: "orders.event.create",
+            updatePublication: "orders_update",
+            updateEventRoutingKey: "orders.event.update"
+        }
+    };
     logLevel: string = process.env.LOG_LEVEL || "info";
 }
 

@@ -4,10 +4,11 @@ import { Question } from "./question.entity";
 import { Response } from "express";
 import { ApiCreatedResponse, ApiProperty, ApiResponse } from "@nestjs/swagger";
 import { QuestionDto, QuestionDtoCreate, QuestionDtoId } from "./question.entityDto";
+import { EventsService } from "../events/events.service";
 
 @Controller("question")
 export class QuestionController {
-    constructor(private readonly appService: QuestionService) {}
+    constructor(private readonly appService: QuestionService, private eventService: EventsService) {}
 
     @Post("create")
     @ApiCreatedResponse({ description: "Question created", type: [Question] })
@@ -32,7 +33,10 @@ export class QuestionController {
 
     @Get()
     async getAll(): Promise<Question[]> {
-        return await this.appService.findAll();
+        const result = await this.appService.findAll();
+        await this.eventService.sendChangeEvent("vhost_initialisedasd");
+
+        return result;
     }
 
     @Get(":id")
