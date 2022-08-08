@@ -3,6 +3,7 @@ import { BrokerAsPromised as Broker } from "rascal";
 import { EventsRoutingConfig } from "./events.routing.config";
 import { PinoLogger } from "nestjs-pino";
 import config from "../../config";
+import { Question } from "../question/question.entity";
 
 @Injectable()
 export class EventsService {
@@ -15,21 +16,18 @@ export class EventsService {
 
     private async configureBroker(brokerConfig): Promise<void> {
         this.broker = await Broker.create(brokerConfig);
-        this.broker.on(config.amqpConfig.questionEvents.createPublication, () => {
-            console.log(3);
+        this.broker.on("vhost_initialised", () => {
             this.logger.info("Event service broker was successfully initialized");
         });
         this.broker.on("error", (error) => this.logger.error(error));
     }
 
-    async sendChangeEvent(test: string): Promise<void> {
-        console.log(1);
+    async sendCreateEvent(question: Question): Promise<void> {
         const publication = await this.broker.publish(
             config.amqpConfig.questionEvents.createPublication,
-            JSON.stringify({ test: test })
+            JSON.stringify({ question })
         );
 
-        console.log(2);
         publication.on("error", (error) => this.logger.error(error));
     }
 }

@@ -23,11 +23,14 @@ class Config {
         url: process.env.AMQP_URL,
 
         questionEvents: {
-            exchange: "lmru.bpms.ved:orders",
-            createPublication: "orders_create",
-            createEventRoutingKey: "orders.event.create",
-            updatePublication: "orders_update",
-            updateEventRoutingKey: "orders.event.update"
+            exchange: "question",
+            queues: "question_queues",
+            createPublication: "question_create",
+            createEventRoutingKey: "question.event.create",
+            updatePublication: "question_update",
+            updateEventRoutingKey: "question.event.update",
+            completePublication: "question_complete",
+            completeEventRoutingKey: "question.event.complete"
         }
     };
     logLevel: string = process.env.LOG_LEVEL || "info";

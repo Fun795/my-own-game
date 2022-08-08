@@ -3,7 +3,7 @@ import { QuestionService } from "./question.service";
 import { Question } from "./question.entity";
 import { Response } from "express";
 import { ApiCreatedResponse, ApiProperty, ApiResponse } from "@nestjs/swagger";
-import { QuestionDto, QuestionDtoCreate, QuestionDtoId } from "./question.entityDto";
+import { QuestionDto, QuestionCreateDto, QuestionIdDto, QuestionReplaceDto } from "./question.entityDto";
 import { EventsService } from "../events/events.service";
 
 @Controller("question")
@@ -12,14 +12,16 @@ export class QuestionController {
 
     @Post("create")
     @ApiCreatedResponse({ description: "Question created", type: [Question] })
-    async create(@Query() params: QuestionDtoCreate, @Res({ passthrough: true }) res: Response): Promise<boolean> {
+    async create(@Query() params: QuestionCreateDto, @Res({ passthrough: true }) res: Response): Promise<QuestionDto> {
         res.status(HttpStatus.CREATED);
+        const result = await this.appService.create(params);
+        this.eventService.sendCreateEvent(result);
 
-        return await this.appService.create(params);
+        return result;
     }
 
     @Delete("delete")
-    async delete(@Query() deleteApi: QuestionDtoId, @Res({ passthrough: true }) res: Response): Promise<string> {
+    async delete(@Query() deleteApi: QuestionIdDto, @Res({ passthrough: true }) res: Response): Promise<string> {
         const status = await this.appService.remove(deleteApi.id);
 
         if (status) {
@@ -33,14 +35,18 @@ export class QuestionController {
 
     @Get()
     async getAll(): Promise<Question[]> {
-        const result = await this.appService.findAll();
-        await this.eventService.sendChangeEvent("vhost_initialisedasd");
+        const result: Question[] = await this.appService.findAll();
 
         return result;
     }
 
     @Get(":id")
-    async getById(@Query() questionIdDto: QuestionDtoId): Promise<Question> {
+    async getById(@Query() questionIdDto: QuestionIdDto): Promise<Question> {
         return await this.appService.findOne(questionIdDto.id);
+    }
+
+    @Post("/replace/:id")
+    async replaceById(@Body() questionReplace: QuestionReplaceDto): Promise<Question> {
+        return await this.appService.replace(questionReplace);
     }
 }

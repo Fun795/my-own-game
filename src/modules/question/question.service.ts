@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
 import { Question } from "./question.entity";
-import { QuestionDtoCreate } from "./question.entityDto";
+import { QuestionDto, QuestionCreateDto } from "./question.entityDto";
 
 @Injectable()
 export class QuestionService {
@@ -22,12 +22,26 @@ export class QuestionService {
         return this.questionRepository.findOne({ id });
     }
 
+    async replace(question: QuestionDto): Promise<Question> {
+        const questionToUpdate = await this.questionRepository.findOne({
+            id: question.id
+        });
+
+        const replaced: QuestionDto = Object.assign({}, questionToUpdate, question);
+
+        return await this.questionRepository.save(replaced);
+    }
+
     async remove(id: number): Promise<number> {
         return await this.questionRepository.delete(id).then(({ affected }) => affected);
     }
 
-    async create(question: QuestionDtoCreate): Promise<boolean> {
+    async create(question: QuestionCreateDto): Promise<QuestionDto> {
         await this.questionRepository.insert(question);
-        return true;
+        const questionReturn: QuestionDto = await this.questionRepository.findOne({
+            order: { id: "DESC" }
+        });
+
+        return questionReturn;
     }
 }
