@@ -4,6 +4,7 @@ import { EventsRoutingConfig } from "./events.routing.config";
 import { PinoLogger } from "nestjs-pino";
 import config from "../../config";
 import { Question } from "../question/question.entity";
+import { QuestionDto } from "../question/question.entityDto";
 
 @Injectable()
 export class EventsService {
@@ -22,7 +23,7 @@ export class EventsService {
         this.broker.on("error", (error) => this.logger.error(error));
     }
 
-    async sendCreateEvent(question: Question): Promise<void> {
+    async sendCreateEvent(question: QuestionDto): Promise<void> {
         const publication = await this.broker.publish(
             config.amqpConfig.questionEvents.createPublication,
             JSON.stringify({ question })

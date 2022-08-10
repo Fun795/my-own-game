@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from "typeorm";
+import { Topic } from "../topic/topic.entity";
 
 @Entity()
 export class Question {
@@ -13,4 +14,8 @@ export class Question {
 
     @Column()
     point: number;
+
+    @ManyToMany(() => Topic)
+    @JoinTable()
+    topic: Topic[];
 }

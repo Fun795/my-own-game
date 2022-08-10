@@ -9,6 +9,7 @@ import { LoggerMiddleware } from "./common/middleware/logger.middleware";
 import config from "./config";
 import { QuestionModule } from "./modules/question/question.module";
 import { EventsModule } from "./modules/events/events.module";
+import pino from "pino";
 
 @Module({
     imports: [
@@ -24,7 +25,12 @@ import { EventsModule } from "./modules/events/events.module";
                     options: {
                         singleLine: true
                     }
-                }
+                },
+                stream: pino.destination({
+                    dest: "./my-file.log", // omit for stdout
+                    minLength: 4096, // Buffer before writing
+                    sync: false // Asynchronous logging
+                })
             }
         }),
         EventsModule,

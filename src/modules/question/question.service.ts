@@ -1,9 +1,9 @@
-import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
 import { Question } from "./question.entity";
-import { QuestionDto, QuestionCreateDto } from "./question.entityDto";
+import { QuestionCreateDto, QuestionDto } from "./question.entityDto";
 
 @Injectable()
 export class QuestionService {
@@ -15,6 +15,8 @@ export class QuestionService {
     ) {}
 
     findAll(): Promise<Question[]> {
+        this.logger.info("findAll");
+
         return this.questionRepository.find();
     }
 
@@ -32,12 +34,19 @@ export class QuestionService {
         return await this.questionRepository.save(replaced);
     }
 
+    async findAllManyTopic(): Promise<Question[]> {
+        return await this.questionRepository
+            .createQueryBuilder("question")
+            .leftJoinAndSelect("question.topic", "topic")
+            .getMany();
+    }
+
     async remove(id: number): Promise<number> {
         return await this.questionRepository.delete(id).then(({ affected }) => affected);
     }
 
     async create(question: QuestionCreateDto): Promise<QuestionDto> {
-        await this.questionRepository.insert(question);
+        await this.questionRepository.save(question);
         const questionReturn: QuestionDto = await this.questionRepository.findOne({
             order: { id: "DESC" }
         });

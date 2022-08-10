@@ -34,6 +34,10 @@ export class QuestionCreateDto {
     @ApiProperty()
     @Column()
     point: number;
+
+    @ApiProperty()
+    @Column()
+    topic: Array<{ id: number }>;
 }
 
 export class QuestionIdDto {
