@@ -12,8 +12,8 @@ async function bootstrap() {
 
     const logger = await app.resolve<PinoLogger>(PinoLogger);
     const config = new DocumentBuilder()
-        .setTitle("Cats example")
-        .setDescription("The cats API description")
+        .setTitle("My own game")
+        .setDescription("The My own game API description")
         .setVersion("1.0")
         .addTag("mog")
         .build();

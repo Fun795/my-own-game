@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from "typeorm";
-import { Topic } from "../topic/topic.entity";
+import { Topic } from "../topic/entities/topic.entity";
 
 @Entity()
 export class Question {

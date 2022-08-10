@@ -9,6 +9,7 @@ import { LoggerMiddleware } from "./common/middleware/logger.middleware";
 import config from "./config";
 import { QuestionModule } from "./modules/question/question.module";
 import { EventsModule } from "./modules/events/events.module";
+import { TopicModule } from "./modules/topic/topic.module";
 import pino from "pino";
 
 @Module({
@@ -34,7 +35,8 @@ import pino from "pino";
             }
         }),
         EventsModule,
-        QuestionModule
+        QuestionModule,
+        TopicModule
     ]
     // controllers: [AppController],
     // providers: [AppService]

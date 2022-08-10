@@ -1,12 +1,13 @@
-import { Body, Controller, Delete, Get, HttpStatus, Post, Query, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpStatus, Patch, Post, Query, Res } from "@nestjs/common";
 import { QuestionService } from "./question.service";
 import { Question } from "./question.entity";
 import { Response } from "express";
-import { ApiCreatedResponse } from "@nestjs/swagger";
+import { ApiCreatedResponse, ApiTags } from "@nestjs/swagger";
 import { QuestionCreateDto, QuestionDto, QuestionIdDto, QuestionReplaceDto } from "./question.entityDto";
 import { EventsService } from "../events/events.service";
 import { isNumber } from "class-validator";
 
+@ApiTags("question")
 @Controller("question")
 export class QuestionController {
     constructor(private readonly appService: QuestionService, private eventService: EventsService) {}
@@ -14,6 +15,11 @@ export class QuestionController {
     @Get()
     async getAll(): Promise<Question[]> {
         return await this.appService.findAll();
+    }
+
+    @Get("get/:id")
+    async getById(@Query() questionIdDto: QuestionIdDto): Promise<Question> {
+        return await this.appService.findOne(questionIdDto.id);
     }
 
     @Post("create")
@@ -45,17 +51,12 @@ export class QuestionController {
         return `noExist row id - ${deleteApi.id}`;
     }
 
-    @Get("get/:id")
-    async getById(@Query() questionIdDto: QuestionIdDto): Promise<Question> {
-        return await this.appService.findOne(questionIdDto.id);
-    }
-
-    @Post("replace/:id")
+    @Patch("replace/:id")
     async replaceById(@Body() questionReplace: QuestionReplaceDto): Promise<Question> {
         return await this.appService.replace(questionReplace);
     }
 
-    @Get("/findAllManyTopic")
+    @Get("/findAllManyTopic/")
     async findAllManyTopic(): Promise<Question[]> {
         return await this.appService.findAllManyTopic();
     }
