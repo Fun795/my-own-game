@@ -58,8 +58,9 @@ export class TopicService {
         for (const topic of randFiveTopic) {
             const randQuestion = topic.questions.sort(() => Math.random() - 0.5);
 
+            board[topic.name] = [];
+
             for (const point of pullQuestionPoint) {
-                board[topic.name] = [];
                 const questFindRandOnPoint = randQuestion.find((question) => question.point === point);
 
                 board[topic.name].push(questFindRandOnPoint);
