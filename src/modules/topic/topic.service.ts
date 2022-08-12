@@ -33,8 +33,11 @@ export class TopicService {
         const topic: Topic = await this.topicRepository.findOne({ id: manyToMany.idTopic });
         const question: Question = await this.questionRepository.findOne({ id: manyToMany.idQuest });
 
-        // topic.questions = [question, Object.assign({}, question, { id: 3 })];
-        topic.questions = [question];
+        const topicMany: Topic = await this.topicRepository.findOne(manyToMany.idTopic, {
+            relations: ["questions"]
+        });
+
+        topic.questions = [question, ...topicMany.questions];
 
         return await this.topicRepository.save(topic);
     }
