@@ -8,3 +8,11 @@ export class TopicDto {
     @ApiProperty()
     name: string;
 }
+
+export class TopicToQuestionDto {
+    @ApiProperty()
+    idQuest: number;
+
+    @ApiProperty()
+    idTopic: number;
+}

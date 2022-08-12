@@ -35,10 +35,13 @@ export class QuestionService {
     }
 
     async findAllManyTopic(): Promise<Question[]> {
-        return await this.questionRepository
-            .createQueryBuilder("question")
-            .leftJoinAndSelect("question.topic", "topic")
-            .getMany();
+        // return await this.questionRepository
+        //     .createQueryBuilder("question")
+        //     .leftJoinAndSelect("question.topics", "topic")
+        //     .getMany();
+        return await this.questionRepository.find({
+            relations: ["topics"]
+        });
     }
 
     async remove(id: number): Promise<number> {

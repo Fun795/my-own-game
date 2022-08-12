@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import { TopicService } from "./topic.service";
 import { CreateTopicDto } from "./dto/create-topic.dto";
 import { UpdateTopicDto } from "./dto/update-topic.dto";
 import { ApiTags } from "@nestjs/swagger";
+import { TopicToQuestionDto } from "./dto/topic.dto";
+import { Topic } from "./entities/topic.entity";
 
 @ApiTags("topic")
 @Controller("topic")
@@ -32,5 +34,21 @@ export class TopicController {
     @Delete(":id")
     remove(@Param("id") id: string) {
         return this.topicService.remove(+id);
+    }
+
+    @Post("findAllManyTopic")
+    findAllManyTopic(): Promise<Topic[]> {
+        return this.topicService.findAllManyTopic();
+    }
+
+    @ApiTags("manyToMany")
+    @Post("manyToMany")
+    manyToMany(@Query() manyToMany: TopicToQuestionDto) {
+        return this.topicService.topicToQuestion(manyToMany);
+    }
+
+    @Post("/generateBoard/")
+    async generateBoard(): Promise<any> {
+        return await this.topicService.generateBoard();
     }
 }

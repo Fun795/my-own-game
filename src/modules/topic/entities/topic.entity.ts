@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-// import { Question } from "../question/question.entity";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, JoinTable } from "typeorm";
+import { Question } from "../../question/question.entity";
 
 @Entity()
 export class Topic {
@@ -9,6 +9,6 @@ export class Topic {
     @Column()
     name: string;
 
-    // @OneToMany(() => Question, (question) => question.user)
-    // question: Question[];
+    @ManyToMany((type) => Question, (question) => question.topics)
+    questions: Question[];
 }

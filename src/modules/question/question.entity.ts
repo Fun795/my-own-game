@@ -15,7 +15,7 @@ export class Question {
     @Column()
     point: number;
 
-    @ManyToMany(() => Topic)
+    @ManyToMany((type) => Topic, (topic) => topic.questions)
     @JoinTable()
-    topic: Topic[];
+    topics: Topic[];
 }

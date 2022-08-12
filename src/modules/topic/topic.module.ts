@@ -3,9 +3,10 @@ import { TopicService } from "./topic.service";
 import { TopicController } from "./topic.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Topic } from "./entities/topic.entity";
+import { Question } from "../question/question.entity";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Topic])],
+    imports: [TypeOrmModule.forFeature([Topic, Question])],
     controllers: [TopicController],
     providers: [TopicService]
 })
