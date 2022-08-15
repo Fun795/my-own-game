@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsInt, IsString, Max, Min } from "class-validator";
+import { Topic } from "../topic/entities/topic.entity";
 
 export class QuestionDto {
     @ApiProperty({ type: Number })

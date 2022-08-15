@@ -9,6 +9,6 @@ export class Topic {
     @Column()
     name: string;
 
-    @OneToMany((type) => Question, (question) => question.topics)
+    @OneToMany(() => Question, (question) => question.topic_)
     questions: Question[];
 }

@@ -10,6 +10,7 @@ import config from "./config";
 import { QuestionModule } from "./modules/question/question.module";
 import { EventsModule } from "./modules/events/events.module";
 import { TopicModule } from "./modules/topic/topic.module";
+import { GameModule } from "./modules/game/game.module";
 import pino from "pino";
 
 @Module({
@@ -36,7 +37,8 @@ import pino from "pino";
         }),
         EventsModule,
         QuestionModule,
-        TopicModule
+        TopicModule,
+        GameModule
     ]
     // controllers: [AppController],
     // providers: [AppService]

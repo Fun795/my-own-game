@@ -16,6 +16,5 @@ export class Question {
     point: number;
 
     @ManyToOne(() => Topic, (topic) => topic.questions)
-    @JoinTable()
-    topics: Topic[];
+    topic_: Topic;
 }
