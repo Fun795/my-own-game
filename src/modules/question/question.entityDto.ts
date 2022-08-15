@@ -38,7 +38,12 @@ export class QuestionCreateDto {
 
     @ApiProperty()
     @Column()
-    topic: Array<{ id: number }>;
+    topic_id: number;
+
+    @ApiProperty()
+    @IsString()
+    @Column()
+    answer: string;
 }
 
 export class QuestionIdDto {
@@ -61,4 +66,13 @@ export class QuestionReplaceDto {
     @ApiProperty({ required: false })
     @Column()
     point: number;
+
+    @ApiProperty()
+    @IsString()
+    @Column()
+    answer: string;
+
+    @ApiProperty({ required: false })
+    @Column()
+    topic_id: number;
 }

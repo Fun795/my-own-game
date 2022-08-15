@@ -27,9 +27,9 @@ export class QuestionController {
     async create(@Body() params: QuestionCreateDto, @Res({ passthrough: true }) res: Response): Promise<QuestionDto> {
         res.status(HttpStatus.CREATED);
 
-        if (isNumber(Number(params.topic))) {
-            params.topic = [{ id: Number(params.topic) }];
-        }
+        // if (isNumber(Number(params.topic))) {
+        //     params.topic =  Number(params.topic) ;
+        // }
 
         const result = await this.appService.create(params);
 

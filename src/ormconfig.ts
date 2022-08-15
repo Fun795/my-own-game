@@ -14,10 +14,10 @@ const ormconfig: ConnectionOptions = {
     entities: ["dist/**/*.entity.{ts,js}"],
     cli: {
         migrationsDir: "src/migrations"
-    }
-    // synchronize: true
-    // logging: true,
-    // logger: "advanced-console",
+    },
+    synchronize: true,
+    logging: true,
+    logger: "advanced-console",
     //     migrationsRun: true,
     //     autoLoadEntities: true,
 };

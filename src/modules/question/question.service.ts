@@ -3,13 +3,16 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
 import { Question } from "./question.entity";
-import { QuestionCreateDto, QuestionDto } from "./question.entityDto";
+import { QuestionCreateDto, QuestionDto, QuestionReplaceDto } from "./question.entityDto";
+import { Topic } from "../topic/entities/topic.entity";
 
 @Injectable()
 export class QuestionService {
     constructor(
         @InjectRepository(Question)
         private questionRepository: Repository<Question>,
+        @InjectRepository(Topic)
+        private topicRepository: Repository<Topic>,
         @InjectPinoLogger(QuestionService.name)
         private readonly logger: PinoLogger
     ) {}
@@ -24,14 +27,23 @@ export class QuestionService {
         return this.questionRepository.findOne({ id });
     }
 
-    async replace(question: QuestionDto): Promise<Question> {
+    async replace(question: QuestionReplaceDto): Promise<Question> {
         const questionToUpdate = await this.questionRepository.findOne({
             id: question.id
         });
 
         const replaced: QuestionDto = Object.assign({}, questionToUpdate, question);
 
-        return await this.questionRepository.save(replaced);
+        await this.questionRepository.save(replaced);
+
+        if (question.topic_id){
+            const topic = await this.topicRepository.findOne(question.topic_id)
+            topic.questions = [questionToUpdate];
+            await this.topicRepository.save(topic);
+        }
+
+
+        return questionToUpdate;
     }
 
     async findAllManyTopic(): Promise<Question[]> {
@@ -50,9 +62,16 @@ export class QuestionService {
 
     async create(question: QuestionCreateDto): Promise<QuestionDto> {
         await this.questionRepository.save(question);
-        const questionReturn: QuestionDto = await this.questionRepository.findOne({
+
+        const questionReturn: Question = await this.questionRepository.findOne({
             order: { id: "DESC" }
         });
+        
+        if (question.topic_id) {
+            const topic = await this.topicRepository.findOne(question.topic_id)
+            topic.questions = [questionReturn];
+            await this.topicRepository.save(topic);
+        }
 
         return questionReturn;
     }
