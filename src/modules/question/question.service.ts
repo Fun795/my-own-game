@@ -5,6 +5,8 @@ import { Repository } from "typeorm";
 import { Question } from "./question.entity";
 import { QuestionCreateDto, QuestionDto, QuestionReplaceDto } from "./question.entityDto";
 import { Topic } from "../topic/entities/topic.entity";
+import { TopicService } from "../topic/topic.service";
+
 
 @Injectable()
 export class QuestionService {
@@ -13,6 +15,7 @@ export class QuestionService {
         private questionRepository: Repository<Question>,
         @InjectRepository(Topic)
         private topicRepository: Repository<Topic>,
+        private topicService: TopicService,
         @InjectPinoLogger(QuestionService.name)
         private readonly logger: PinoLogger
     ) {}
@@ -36,9 +39,10 @@ export class QuestionService {
 
         await this.questionRepository.save(replaced);
 
+        const topicQuestion = await this.topicService.topicToQuestion({idQuest: Number(question.id), idTopic: Number(question.topic_id) })
         if (question.topic_id){
             const topic = await this.topicRepository.findOne(question.topic_id)
-            topic.questions = [questionToUpdate];
+            topic.questions = topicQuestion.questions;
             await this.topicRepository.save(topic);
         }
 
@@ -66,10 +70,10 @@ export class QuestionService {
         const questionReturn: Question = await this.questionRepository.findOne({
             order: { id: "DESC" }
         });
-        
+        const topicQuestion = await this.topicService.topicToQuestion({idQuest: questionReturn.id, idTopic: Number(question.topic_id) })
         if (question.topic_id) {
             const topic = await this.topicRepository.findOne(question.topic_id)
-            topic.questions = [questionReturn];
+            topic.questions = topicQuestion.questions;
             await this.topicRepository.save(topic);
         }
 

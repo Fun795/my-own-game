@@ -51,6 +51,7 @@ export class TopicService {
     async generateBoard() {
         const pullQuestionPoint = [100, 200, 300, 400, 500];
         const board = {};
+        const ids = [];
 
         const topics = await this.findAllManyTopic();
         const randFiveTopic = topics.sort(() => Math.random() - 0.5).slice(0, 5);
@@ -63,11 +64,15 @@ export class TopicService {
             for (const point of pullQuestionPoint) {
                 const questFindRandOnPoint = randQuestion.find((question) => question.point === point);
 
-                board[topic.name].push(questFindRandOnPoint);
+                // board[topic.name].push(questFindRandOnPoint);
+                if(questFindRandOnPoint){
+                    ids.push(questFindRandOnPoint.id);
+                }
+
             }
         }
 
-        return board;
+        return ids ;
     }
 
     findAll() {
