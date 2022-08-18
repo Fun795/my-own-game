@@ -3,11 +3,12 @@ import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { Logger, PinoLogger } from "nestjs-pino";
 import { AppModule } from "./app.module";
 import { ConfigService } from "@nestjs/config";
+import { ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, { bufferLogs: true });
     const configService = app.get(ConfigService);
-
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
     app.useLogger(app.get(Logger));
 
     const logger = await app.resolve<PinoLogger>(PinoLogger);
@@ -21,7 +22,7 @@ async function bootstrap() {
     SwaggerModule.setup("api", app, document);
 
     // app.useGlobalFilters(new BaseExceptionFilter(await app.resolve<PinoLogger>(PinoLogger)));
-    app.useGlobalFilters(new BaseExceptionFilter());
+    // app.useGlobalFilters(new BaseExceptionFilter());
 
     const restPort = configService.get("server.restPort");
     await app.listen(restPort);

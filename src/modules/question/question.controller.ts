@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, HttpStatus, Patch, Post, Query, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res } from "@nestjs/common";
 import { QuestionService } from "./question.service";
 import { Question } from "./question.entity";
 import { Response } from "express";
-import { ApiCreatedResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { QuestionCreateDto, QuestionDto, QuestionIdDto, QuestionReplaceDto } from "./question.entityDto";
 import { EventsService } from "../events/events.service";
 import { isNumber } from "class-validator";
@@ -17,16 +17,20 @@ export class QuestionController {
         return await this.appService.findAll();
     }
 
-    @Get("get/:id")
-    async getById(@Query() questionIdDto: QuestionIdDto): Promise<Question> {
+    @Get(":id")
+    async getById(@Param() questionIdDto: QuestionIdDto): Promise<Question> {
         return await this.appService.findOne(questionIdDto.id);
     }
 
-    @Post("create")
-    @ApiCreatedResponse({ description: "Question created", type: [Question] })
-    async create(@Body() params: QuestionCreateDto, @Res({ passthrough: true }) res: Response): Promise<QuestionDto> {
-        res.status(HttpStatus.CREATED);
-
+    @Post("")
+    @ApiBadRequestResponse({
+        description: "Invalid body params"
+    })
+    @ApiCreatedResponse({
+        description: "Question created",
+        type: Question
+    })
+    async create(@Body() params: QuestionCreateDto): Promise<QuestionDto> {
         // if (isNumber(Number(params.topic))) {
         //     params.topic =  Number(params.topic) ;
         // }
@@ -38,17 +42,15 @@ export class QuestionController {
         return result;
     }
 
-    @Delete("delete")
-    async delete(@Query() deleteApi: QuestionIdDto, @Res({ passthrough: true }) res: Response): Promise<string> {
-        const status = await this.appService.remove(deleteApi.id);
+    @Delete(":id")
+    @ApiOperation({ operationId: "removeQuestion" })
+    @ApiNotFoundResponse({
+        description: "Order not found by number"
+    })
+    async delete(@Param("id") id: number): Promise<string> {
+        const status = await this.appService.remove(id);
 
-        if (status) {
-            res.status(HttpStatus.OK);
-            return "removed";
-        }
-
-        res.status(HttpStatus.NO_CONTENT);
-        return `noExist row id - ${deleteApi.id}`;
+        return `row id - ${status}`;
     }
 
     @Patch("replace/:id")

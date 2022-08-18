@@ -25,24 +25,22 @@ export class QuestionDto {
 export class QuestionCreateDto {
     @ApiProperty()
     @IsString()
-    @Column()
     title: string;
 
     @ApiProperty()
-    @Column()
+    @IsString()
     desc: string;
 
     @ApiProperty()
-    @Column()
+    @IsInt()
     point: number;
 
     @ApiProperty()
-    @Column()
+    @IsInt()
     topic_id: number;
 
     @ApiProperty()
     @IsString()
-    @Column()
     answer: string;
 }
 
@@ -52,27 +50,26 @@ export class QuestionIdDto {
 }
 export class QuestionReplaceDto {
     @ApiProperty()
+    @IsInt()
     id: number;
 
     @ApiProperty({ required: false })
     @IsString()
-    @Column()
     title: string;
 
     @ApiProperty({ required: false })
-    @Column()
+    @IsString()
     desc: string;
 
     @ApiProperty({ required: false })
-    @Column()
+    @IsInt()
     point: number;
 
     @ApiProperty()
     @IsString()
-    @Column()
     answer: string;
 
     @ApiProperty({ required: false })
-    @Column()
+    @IsInt()
     topic_id: number;
 }

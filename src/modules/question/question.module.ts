@@ -8,7 +8,7 @@ import { Topic } from "../topic/entities/topic.entity";
 import { TopicModule } from "../topic/topic.module";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Question,Topic]), TopicModule],
+    imports: [TypeOrmModule.forFeature([Question, Topic]), TopicModule],
     controllers: [QuestionController],
     providers: [QuestionService, EventsService],
     exports: [TypeOrmModule]
