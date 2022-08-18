@@ -10,15 +10,12 @@ export class QuestionDto {
 
     @ApiProperty()
     @IsString()
-    @Column()
     title: string;
 
     @ApiProperty()
-    @Column()
     desc: string;
 
     @ApiProperty()
-    @Column()
     point: number;
 }
 
