@@ -16,6 +16,7 @@ import { UpdateTopicDto } from "../../../src/modules/topic/dto/update-topic.dto"
 
 describe("Topic", () => {
     let app: INestApplication;
+    let TopicServiceMock: TopicService;
 
     beforeAll(async () => {
         const moduleRef = await Test.createTestingModule({
@@ -56,7 +57,7 @@ describe("Topic", () => {
 
         app = moduleRef.createNestApplication();
         app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
-
+        TopicServiceMock = await app.resolve(TopicService);
         await app.init();
     });
 
@@ -134,7 +135,7 @@ describe("Topic", () => {
 
     test("/POST generateBoard/. Should return 201", () => {
         const mockResult = [1, 2, 3];
-        jest.spyOn(TopicService.prototype, "generateBoard").mockResolvedValue(mockResult);
+        jest.spyOn(TopicServiceMock, "generateBoard").mockResolvedValue(mockResult);
 
         return request(app.getHttpServer())
             .post(`/topic/generateBoard`)
