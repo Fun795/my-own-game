@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateTopicDto } from "./dto/create-topic.dto";
 import { UpdateTopicDto } from "./dto/update-topic.dto";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -6,7 +6,7 @@ import { Repository } from "typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Topic } from "./entities/topic.entity";
 import { Question } from "../question/question.entity";
-import { TopicToQuestionDto } from "./dto/topic.dto";
+import { TopicIdDto, TopicToQuestionDto } from "./dto/topic.dto";
 
 @Injectable()
 export class TopicService {
@@ -20,13 +20,7 @@ export class TopicService {
     ) {}
 
     async create(createTopicDto: CreateTopicDto) {
-        await this.topicRepository.save(createTopicDto);
-
-        const topicReturn: CreateTopicDto = await this.topicRepository.findOne({
-            order: { id: "DESC" }
-        });
-
-        return topicReturn;
+        return await this.topicRepository.save(createTopicDto);
     }
 
     async topicToQuestion(manyToMany: TopicToQuestionDto) {
@@ -65,22 +59,27 @@ export class TopicService {
                 const questFindRandOnPoint = randQuestion.find((question) => question.point === point);
 
                 // board[topic.name].push(questFindRandOnPoint);
-                if(questFindRandOnPoint){
+                if (questFindRandOnPoint) {
                     ids.push(questFindRandOnPoint.id);
                 }
-
             }
         }
 
-        return ids ;
+        return ids;
     }
 
     findAll() {
         return this.topicRepository.find();
     }
 
-    findOne(id: number) {
-        return this.topicRepository.findOne({ id });
+    async findOne(id: number) {
+        const topic = await this.topicRepository.findOne({ id });
+
+        if (!topic) {
+            throw new NotFoundException("topic not found by id");
+        }
+
+        return topic;
     }
 
     async update(updateTopicDto: UpdateTopicDto) {
@@ -88,6 +87,12 @@ export class TopicService {
     }
 
     async remove(id: number) {
-        return await this.topicRepository.delete(id);
+        const deleted = await this.topicRepository.delete(id).then(({ affected }) => affected);
+
+        if (!deleted) {
+            throw new NotFoundException("Topic not found by id");
+        }
+
+        return deleted;
     }
 }
