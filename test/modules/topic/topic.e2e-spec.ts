@@ -1,7 +1,6 @@
 import * as request from "supertest";
 import { Test } from "@nestjs/testing";
 import { QuestionService } from "../../../src/modules/question/question.service";
-import { QuestionController } from "../../../src/modules/question/question.controller";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { getLoggerToken, PinoLogger } from "nestjs-pino";
@@ -14,7 +13,6 @@ import { eventsServiceMock } from "../../mock/eventsService.mock";
 import { TopicController } from "../../../src/modules/topic/topic.controller";
 import { CreateTopicDto } from "../../../src/modules/topic/dto/create-topic.dto";
 import { UpdateTopicDto } from "../../../src/modules/topic/dto/update-topic.dto";
-import { TopicIdDto } from "../../../src/modules/topic/dto/topic.dto";
 
 describe("Topic", () => {
     let app: INestApplication;
