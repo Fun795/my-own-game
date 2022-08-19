@@ -1,28 +1,19 @@
 import * as request from "supertest";
 import { Test } from "@nestjs/testing";
-import { QuestionModule } from "../../../src/modules/question/question.module";
 import { QuestionService } from "../../../src/modules/question/question.service";
 import { QuestionController } from "../../../src/modules/question/question.controller";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { PinoLogger } from "nestjs-pino";
+import { getLoggerToken } from "nestjs-pino";
 import { EventsService } from "../../../src/modules/events/events.service";
 import { Question } from "../../../src/modules/question/question.entity";
 import { Topic } from "../../../src/modules/topic/entities/topic.entity";
-
-const repositoryMock = {
-    find: jest.fn(),
-    findOne: jest.fn(),
-    softRemove: jest.fn(),
-    save: jest.fn(),
-    merge: jest.fn(),
-    update: jest.fn(),
-    create: jest.fn()
-};
+import { TopicService } from "../../../src/modules/topic/topic.service";
+import { repositoryMock } from "../../mock/repository.mock";
+import { eventsServiceMock } from "../../mock/eventsService.mock";
 
 describe("Question", () => {
     let app: INestApplication;
-    let catsService = { findAll: () => ["test"] };
 
     beforeAll(async () => {
         const moduleRef = await Test.createTestingModule({
@@ -30,19 +21,27 @@ describe("Question", () => {
             providers: [
                 QuestionService,
                 {
+                    provide: TopicService,
+                    useValue: {
+                        topicToQuestion: () => {
+                            return { questions: [new Question()] };
+                        }
+                    }
+                },
+                {
                     provide: EventsService,
-                    useValue: { sendCreateEvent: jest.fn() } //TODO вынести
+                    useValue: eventsServiceMock
                 },
                 {
                     provide: getRepositoryToken(Question),
-                    useValue: repositoryMock //TODO вынести
+                    useValue: repositoryMock
                 },
                 {
                     provide: getRepositoryToken(Topic),
-                    useValue: repositoryMock //TODO вынести
+                    useValue: repositoryMock
                 },
                 {
-                    provide: "PinoLogger:QuestionService", //TODO разобраться
+                    provide: getLoggerToken(QuestionService.name), //provide: "PinoLogger:QuestionService",
                     useValue: {
                         error: jest.fn(),
                         info: jest.fn(),
@@ -64,7 +63,6 @@ describe("Question", () => {
 
         return request(app.getHttpServer())
             .get("/question")
-            .expect(200)
             .expect((res) => {
                 expect(res.body).toMatchObject(question);
             });
@@ -77,10 +75,13 @@ describe("Question", () => {
 
     test("/POST question/. Should return 201 if order not exist and have been created", () => {
         const question: Question = { id: 1, title: "", point: 500, answer: "", desc: "", topic_: new Topic() };
+        const topic: Topic = { id: 1, questions: [question], name: "" };
         jest.spyOn(repositoryMock, "save").mockResolvedValue(question);
+        jest.spyOn(repositoryMock, "findOne").mockResolvedValue(topic);
+
         return request(app.getHttpServer())
             .post(`/question`)
-            .send({ title: "", point: 500, answer: "", desc: "", topic_: new Topic() })
+            .send({ title: "string", desc: "string", point: 0, topic_id: 1, answer: "string" })
             .expect(201)
             .expect((res) => {
                 expect(res.body).toMatchObject(question);
@@ -89,6 +90,10 @@ describe("Question", () => {
 
     test("/POST question/. Should return 400 if send empty body", () => {
         return request(app.getHttpServer()).post(`/question`).send({}).expect(400);
+    });
+
+    test("/POST question/. Should return 400 if send empty body", () => {
+        return request(app.getHttpServer()).post(`/question`).send({ title: "title", desc: "test" }).expect(400);
     });
 
     afterAll(async () => {
