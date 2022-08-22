@@ -11,6 +11,7 @@ import { Topic } from "../../../src/modules/topic/entities/topic.entity";
 import { TopicService } from "../../../src/modules/topic/topic.service";
 import { repositoryMock } from "../../mock/repository.mock";
 import { eventsServiceMock } from "../../mock/eventsService.mock";
+import { loggerMock } from "../../mock/logger.mock";
 
 describe("Question", () => {
     let app: INestApplication;
@@ -42,11 +43,7 @@ describe("Question", () => {
                 },
                 {
                     provide: getLoggerToken(QuestionService.name), //provide: "PinoLogger:QuestionService",
-                    useValue: {
-                        error: jest.fn(),
-                        info: jest.fn(),
-                        debug: jest.fn()
-                    }
+                    useValue: loggerMock
                 }
             ]
         }).compile();
