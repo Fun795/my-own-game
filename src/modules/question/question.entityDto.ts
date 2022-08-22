@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsInt, IsString, Max, Min } from "class-validator";
 import { Topic } from "../topic/entities/topic.entity";
+import { Type } from "class-transformer";
 
 export class QuestionDto {
     @ApiProperty({ type: Number })
@@ -17,6 +18,22 @@ export class QuestionDto {
 
     @ApiProperty()
     point: number;
+}
+
+export class CheckQuestionDto {
+    @ApiProperty({ type: Number })
+    @Type((value) => Number)
+    @IsInt()
+    id: number;
+
+    @ApiProperty({ type: Number })
+    @Type((value) => Number)
+    @IsInt()
+    game_id: number;
+
+    @ApiProperty()
+    @IsString()
+    answer: string;
 }
 
 export class QuestionCreateDto {

@@ -1,7 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, JoinTable } from "typeorm";
-import { Topic } from "../../topic/entities/topic.entity";
-import { Question } from "../../question/question.entity";
-import { QuestionDto } from "../../question/question.entityDto";
+import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Game {
@@ -11,8 +8,18 @@ export class Game {
     @Column("jsonb", { nullable: true })
     questions: number[];
 
-    @Column()
-    status: boolean;
+    @Column({
+        default: 0
+    })
+    step: number;
+
+    @UpdateDateColumn()
+    updatedDate: Date;
+
+    @Column({
+        default: "process"
+    })
+    status: string;
 
     @Column({
         default: 0

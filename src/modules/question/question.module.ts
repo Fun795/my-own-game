@@ -11,6 +11,6 @@ import { TopicModule } from "../topic/topic.module";
     imports: [TypeOrmModule.forFeature([Question, Topic]), TopicModule],
     controllers: [QuestionController],
     providers: [QuestionService, EventsService],
-    exports: [TypeOrmModule]
+    exports: [TypeOrmModule, QuestionService]
 })
 export class QuestionModule {}
