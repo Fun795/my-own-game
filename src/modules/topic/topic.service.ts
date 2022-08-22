@@ -48,7 +48,7 @@ export class TopicService {
         });
     }
 
-    async generateBoard() {
+    async generateBoard(): Promise<number[]> {
         const pullQuestionPoint = [100, 200, 300, 400, 500];
         const board = {};
         const ids = [];
@@ -65,14 +65,13 @@ export class TopicService {
                 const questFindRandOnPoint = randQuestion.find((question) => question.point === point);
 
                 // board[topic.name].push(questFindRandOnPoint);
-                if(questFindRandOnPoint){
+                if (questFindRandOnPoint) {
                     ids.push(questFindRandOnPoint.id);
                 }
-
             }
         }
 
-        return ids ;
+        return ids;
     }
 
     findAll() {
