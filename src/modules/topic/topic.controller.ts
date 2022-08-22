@@ -41,7 +41,6 @@ export class TopicController {
         return this.topicService.findAllManyTopic();
     }
 
-    @ApiTags("manyToMany")
     @Post("manyToMany")
     manyToMany(@Query() manyToMany: TopicToQuestionDto) {
         return this.topicService.topicToQuestion(manyToMany);

@@ -16,3 +16,8 @@ export class TopicToQuestionDto {
     @ApiProperty()
     idTopic: number;
 }
+
+export class TopicIdDto {
+    @ApiProperty()
+    id: number;
+}
