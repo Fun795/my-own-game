@@ -10,9 +10,9 @@ const ormconfig: ConnectionOptions = {
     database: Config.postgresql.db,
     // migrations: [__dirname + "/src/migrations/*{.ts,.js}"],
     // eslint-disable-next-line node/no-path-concat
-    entities: [__dirname + "/src/**/*.entity.{ts,js}"],
+    //entities: [__dirname + "/src/**/*.entity.{ts,js}"],
     migrations: ["dist/migrations/*{.ts,.js}"],
-    //entities: ["dist/**/*.entity.{ts,js}"],
+    entities: ["dist/**/*.entity.{ts,js}"],
     cli: {
         migrationsDir: "src/migrations"
     },
