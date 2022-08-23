@@ -17,7 +17,7 @@ export class GameQuestionAnswerService {
 
     async create(createAddAnswerQuestionDto: CreateGameAnswerQuestionDto) {
         // try {
-        return await this.gameAnswerQuestionRepository.insert(createAddAnswerQuestionDto);
+        await this.gameAnswerQuestionRepository.insert(createAddAnswerQuestionDto);
         // } catch (error) {
         //     console.log(error);
         //     // throw new BadGatewayException("gameAnswerQuestion not found by id");

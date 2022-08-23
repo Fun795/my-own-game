@@ -54,7 +54,7 @@ export class GameService {
             throw "id question is not include to this id game";
         }
 
-        const answerIsRight: boolean = answer == questionInfo.answer.trim().toLowerCase();
+        const answerIsRight: boolean = answer === questionInfo.answer.trim().toLowerCase();
         const resultAddQuestionAnswerRow = await this.addQuestionAnswerRow(question_id, game_id, answerIsRight);
         if (!resultAddQuestionAnswerRow) {
             throw "Something went wrong with addQuestionAnswerRow function";
@@ -77,7 +77,7 @@ export class GameService {
         question_id: number,
         game_id: number,
         answer: boolean
-    ): Promise<CreateGameAnswerQuestionDto> {
+    ): Promise<any> {
         const gameQuestionAnswerServiceDto: CreateGameAnswerQuestionDto = {
             game_id: game_id,
             question_id: question_id,

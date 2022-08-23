@@ -13,5 +13,5 @@
     "strict": true,
     "strictPropertyInitialization": false
   },
-  "exclude": ["node_modules", "dist", "nest-report-client", "tools"]
+  "exclude": ["node_modules", "dist", "tools"]
 }

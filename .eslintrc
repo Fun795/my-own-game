@@ -3,7 +3,7 @@
                 "@byndyusoft/eslint-config/typescript",
                 "@byndyusoft/eslint-config/node",
                 "@byndyusoft/eslint-config/jest",
-                "@byndyusoft/eslint-config/advanced"
+//                "@byndyusoft/eslint-config/advanced"
         ],
         "parserOptions": {
                 "project": "tsconfig.json"
@@ -46,7 +46,6 @@
                         {
                                 "ignores": ["modules"]
                         }
-                ],
-                "unicorn/import-style": "error"
+                ]
         }
 }
