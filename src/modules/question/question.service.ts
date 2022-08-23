@@ -39,20 +39,24 @@ export class QuestionService {
         const questionToUpdate = await this.questionRepository.findOne({
             id: question.id
         });
-
+        if (!questionToUpdate) {
+            throw "Error2";
+        }
         const replaced: QuestionDto = Object.assign({}, questionToUpdate, question);
 
         await this.questionRepository.save(replaced);
 
-        const topicQuestion = await this.topicService.topicToQuestion({
+        const topicQuestion: Topic | boolean = await this.topicService.topicToQuestion({
             idQuest: Number(question.id),
             idTopic: Number(question.topic_id)
         });
 
         if (question.topic_id) {
-            const topic = await this.topicRepository.findOne(question.topic_id);
-            topic.questions = topicQuestion.questions;
-            await this.topicRepository.save(topic);
+            const topic: Topic | undefined = await this.topicRepository.findOne(question.topic_id);
+            if (topic) {
+                topic.questions = topicQuestion.questions;
+                await this.topicRepository.save(topic);
+            }
         }
 
         return questionToUpdate;
@@ -84,6 +88,9 @@ export class QuestionService {
 
         if (question.topic_id) {
             const topic = await this.topicRepository.findOne(question.topic_id);
+            if (!topic) {
+                throw "error";
+            }
             topic.questions = topicQuestion.questions;
             await this.topicRepository.save(topic);
         }

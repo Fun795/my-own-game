@@ -18,7 +18,7 @@ export class QuestionController {
     }
 
     @Get(":id")
-    async getById(@Param() questionIdDto: QuestionIdDto): Promise<Question> {
+    async getById(@Param() questionIdDto: QuestionIdDto): Promise<QuestionDto> {
         return await this.appService.findOne(questionIdDto.id);
     }
 
@@ -54,7 +54,7 @@ export class QuestionController {
     }
 
     @Patch("replace/:id")
-    async replaceById(@Body() questionReplace: QuestionReplaceDto): Promise<Question> {
+    async replaceById(@Body() questionReplace: QuestionReplaceDto): Promise<QuestionDto> {
         return await this.appService.replace(questionReplace);
     }
 

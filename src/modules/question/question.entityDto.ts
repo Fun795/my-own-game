@@ -18,6 +18,10 @@ export class QuestionDto {
 
     @ApiProperty()
     point: number;
+
+    @ApiProperty()
+    @IsString()
+    answer: string;
 }
 
 export class CheckQuestionDto {

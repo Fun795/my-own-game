@@ -28,8 +28,8 @@ export class GameController {
     }
 
     @Get("checkAnswer/:game_id/:id/:answer")
-    checkAnswer(@Param() parameter: CheckQuestionDto) {
-        return this.gameService.checkAnswer(parameter.answer, parameter.id, parameter.game_id);
+    processingQuestionAnswer(@Param() parameter: CheckQuestionDto) {
+        return this.gameService.processingQuestionAnswer(parameter.answer, parameter.id, parameter.game_id);
     }
 
     //*********************************************************

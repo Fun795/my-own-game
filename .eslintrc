@@ -1,0 +1,52 @@
+{
+        "extends": [
+                "@byndyusoft/eslint-config/typescript",
+                "@byndyusoft/eslint-config/node",
+                "@byndyusoft/eslint-config/jest",
+                "@byndyusoft/eslint-config/advanced"
+        ],
+        "parserOptions": {
+                "project": "tsconfig.json"
+        },
+        "settings": {
+                "node": {
+                        "tryExtensions": [".js", ".json", ".ts"]
+                }
+        },
+        "rules": {
+                "jest/prefer-to-be-null": "off",
+                "@typescript-eslint/no-floating-promises": "off",
+                "node/no-unpublished-require": "off",
+                "@typescript-eslint/no-unnecessary-condition": "off",
+                "@typescript-eslint/no-confusing-non-null-assertion": "off",
+                "@typescript-eslint/no-explicit-any": "off",
+                "@typescript-eslint/no-shadow": "off",
+                "@typescript-eslint/no-unsafe-call": "off",
+                "@typescript-eslint/no-unsafe-assignment": "off",
+                "@typescript-eslint/no-unsafe-member-access": "off",
+                "@typescript-eslint/no-unsafe-return": "off",
+                "@typescript-eslint/prefer-enum-initializers": "off",
+                "@typescript-eslint/prefer-literal-enum-member": "off",
+                "@typescript-eslint/prefer-ts-expect-error": "off",
+                "@typescript-eslint/restrict-template-expressions": "off",
+                "@typescript-eslint/return-await": "off",
+                "@typescript-eslint/naming-convention": "off",
+                "@typescript-eslint/no-unused-vars": "off",
+                "sonarjs/no-small-switch": "off",
+                "unicorn/prevent-abbreviations": "off",
+                "unicorn/filename-case": "off",
+                "no-useless-constructor": "off",
+                "no-await-in-loop": "off",
+                "no-else-return": "off",
+                "no-fallthrough": "off",
+                "arrow-parens": "off",
+                "node/no-unpublished-import": "off",
+                "node/no-unsupported-features/es-syntax": [
+                        "error",
+                        {
+                                "ignores": ["modules"]
+                        }
+                ],
+                "unicorn/import-style": "error"
+        }
+}
