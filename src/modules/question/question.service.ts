@@ -39,9 +39,11 @@ export class QuestionService {
         const questionToUpdate = await this.questionRepository.findOne({
             id: question.id
         });
+
         if (!questionToUpdate) {
-            throw "Error2";
+            throw new NotFoundException("question not found by id");
         }
+
         const replaced: QuestionDto = Object.assign({}, questionToUpdate, question);
 
         await this.questionRepository.save(replaced);
@@ -89,7 +91,7 @@ export class QuestionService {
         if (question.topic_id) {
             const topic = await this.topicRepository.findOne(question.topic_id);
             if (!topic) {
-                throw "error";
+                throw new NotFoundException("topic not found by id");
             }
             topic.questions = topicQuestion.questions;
             await this.topicRepository.save(topic);

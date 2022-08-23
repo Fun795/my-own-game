@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
@@ -27,16 +27,14 @@ export class GameService {
         const questions = await this.topicService.generateBoard();
 
         game.fillQuestions(questions);
-        const savedGame = this.gameRepository.save(game);
-
-        return savedGame;
+        return this.gameRepository.save(game);
     }
 
-    findAll() {
+    findAll(): Promise<Game[]> {
         return this.gameRepository.find({ select: ["id", "updatedDate"], order: { updatedDate: "DESC" } });
     }
 
-    findOne(id: number) {
+    findOne(id: number): Promise<Game | undefined> {
         return this.gameRepository.findOne({ id });
     }
 
@@ -48,19 +46,19 @@ export class GameService {
         const questionInfo: QuestionDto | undefined = await this.questionService.findOne(question_id);
 
         if (!questionInfo) {
-            throw "id question does not exist";
+            throw new NotFoundException("id question does not exist");
         }
 
         const isRelatedToGame: boolean = await this.checkAnswerInGame(question_id, game_id);
 
         if (!isRelatedToGame) {
-            throw "id question is not include to this id game";
+            throw Error("id question is not include to this id game");
         }
 
         const answerIsRight: boolean = answer === questionInfo.answer.trim().toLowerCase();
         const resultAddQuestionAnswerRow = await this.addQuestionAnswerRow(question_id, game_id, answerIsRight);
         if (!resultAddQuestionAnswerRow) {
-            throw "Something went wrong with addQuestionAnswerRow function";
+            throw Error("Something went wrong with addQuestionAnswerRow function");
         }
         await this.updateGameAfterUserAnswer(question_id, game_id, answerIsRight, questionInfo.point);
 
@@ -71,16 +69,12 @@ export class GameService {
         const gameInfo: Game | undefined = await this.gameRepository.findOne(game_id);
 
         if (!gameInfo) {
-            return false;
+            throw new NotFoundException("game not found by id");
         }
 
         return gameInfo.questions.includes(question_id);
     }
-    async addQuestionAnswerRow(
-        question_id: number,
-        game_id: number,
-        answer: boolean
-    ): Promise<any> {
+    async addQuestionAnswerRow(question_id: number, game_id: number, answer: boolean): Promise<any> {
         const gameQuestionAnswerServiceDto: CreateGameAnswerQuestionDto = {
             game_id: game_id,
             question_id: question_id,
@@ -98,7 +92,7 @@ export class GameService {
             id: game_id
         });
         if (!gameToUpdate) {
-            throw "id game does not exist";
+            throw new NotFoundException("game not found by id");
         }
         gameToUpdate.total_score += answer ? updated_point : 0;
         gameToUpdate.step++;
