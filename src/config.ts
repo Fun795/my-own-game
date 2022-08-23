@@ -22,6 +22,7 @@ class Config {
         password: process.env.AMQP_PASSWORD,
         url: process.env.AMQP_URL,
 
+        //TODO использовать переменные из .ENV
         questionEvents: {
             exchange: "question",
             queues: "question_queues",
