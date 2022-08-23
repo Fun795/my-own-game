@@ -24,7 +24,7 @@ export class GameController {
         return this.gameService.findOne(id);
     }
 
-    @Get("checkAnswer/:game_id/:id/:answer") processingQuestionAnswer(
+    @Get("processingQuestionAnswer/:game_id/:id/:answer") processingQuestionAnswer(
         @Param() parameter: CheckQuestionDto
     ): Promise<CreateGameAnswerQuestionDto> {
         return this.gameService.processingQuestionAnswer(parameter.answer, parameter.id, parameter.game_id);

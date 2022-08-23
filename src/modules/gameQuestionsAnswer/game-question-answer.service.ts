@@ -15,27 +15,32 @@ export class GameQuestionAnswerService {
         private readonly logger: PinoLogger // // private topicService: TopicService
     ) {}
 
-    async create(createAddAnswerQuestionDto: CreateGameAnswerQuestionDto) {
+    async create(createAddAnswerQuestionDto: CreateGameAnswerQuestionDto): Promise<CreateGameAnswerQuestionDto> {
         // try {
-        await this.gameAnswerQuestionRepository.insert(createAddAnswerQuestionDto);
-        // } catch (error) {
-        //     console.log(error);
-        //     // throw new BadGatewayException("gameAnswerQuestion not found by id");
-        // }
+
+        const resultInsert = await this.gameAnswerQuestionRepository.insert(createAddAnswerQuestionDto);
+        if (!resultInsert) {
+            throw new NotFoundException("AnswerQuestion create to db command failed");
+        }
+        const answerInserted = this.findOneToGameIdAndQuestionId(
+            createAddAnswerQuestionDto.game_id,
+            createAddAnswerQuestionDto.question_id
+        );
+        return answerInserted;
     }
 
-    findAll() {
-        return this.gameAnswerQuestionRepository.find({});
+    async findAll(): Promise<GameAnswerQuestion[]> {
+        return await this.gameAnswerQuestionRepository.find({});
     }
 
-    findAllToGameId(game_id: number) {
+    findAllToGameId(game_id: number): Promise<GameAnswerQuestion[]> {
         return this.gameAnswerQuestionRepository.find({
             game_id: game_id
         });
     }
 
-    findOneToGameIdAndQuestionId(game_id: number, question_id: number) {
-        return this.gameAnswerQuestionRepository.find({
+    findOneToGameIdAndQuestionId(game_id: number, question_id: number): Promise<GameAnswerQuestion> {
+        return this.gameAnswerQuestionRepository.findOne({
             game_id: game_id,
             question_id: question_id
         });

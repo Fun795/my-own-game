@@ -10,7 +10,7 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
-    "strict": true,
+    "strict": false,
     "strictPropertyInitialization": false
   },
   "exclude": ["node_modules", "dist", "tools"]

@@ -9,6 +9,7 @@ import { CreateGameAnswerQuestionDto } from "../gameQuestionsAnswer/dto/addGameA
 import { QuestionService } from "../question/question.service";
 import { UpdateGameDto } from "./dto/update-game.dto";
 import { QuestionDto } from "../question/question.entityDto";
+import { NotAcceptableException } from "@nestjs/common/exceptions/not-acceptable.exception";
 
 @Injectable()
 export class GameService {
@@ -67,6 +68,9 @@ export class GameService {
 
     async checkAnswerInGame(question_id: number, game_id: number): Promise<boolean> {
         const gameInfo: Game | undefined = await this.gameRepository.findOne(game_id);
+        if (gameInfo.status === "finished") {
+            throw new NotAcceptableException(`game to id - ${game_id} was finished!`);
+        }
 
         if (!gameInfo) {
             throw new NotFoundException("game not found by id");
