@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { CreateGameDto } from "./dto/create-game.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
@@ -23,10 +22,14 @@ export class GameService {
         private readonly logger: PinoLogger
     ) {}
 
-    async create(createGame: CreateGameDto): Promise<Game | undefined> {
-        const questionBoard = await this.topicService.generateBoard();
-        createGame.questions = questionBoard;
-        return await this.gameRepository.save(createGame);
+    async create(): Promise<Game> {
+        const game = this.gameRepository.create();
+        const questions = await this.topicService.generateBoard();
+
+        game.fillQuestions(questions);
+        const savedGame = this.gameRepository.save(game);
+
+        return savedGame;
     }
 
     findAll() {

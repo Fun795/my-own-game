@@ -5,7 +5,7 @@ export class Game {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column("jsonb", { nullable: true })
+    @Column("jsonb", { default: [] })
     questions: number[];
 
     @Column({
@@ -25,4 +25,8 @@ export class Game {
         default: 0
     })
     total_score: number;
+
+    fillQuestions(questions: number[]): void {
+        this.questions = [...questions];
+    }
 }

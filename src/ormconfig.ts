@@ -16,7 +16,7 @@ const ormconfig: ConnectionOptions = {
     cli: {
         migrationsDir: "src/migrations"
     },
-    synchronize: false,
+    synchronize: true,
     logging: true,
     logger: "advanced-console"
     //     migrationsRun: true,
