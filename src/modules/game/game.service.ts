@@ -78,7 +78,11 @@ export class GameService {
 
         return gameInfo.questions.includes(question_id);
     }
-    async addQuestionAnswerRow(question_id: number, game_id: number, answer: boolean): Promise<any> {
+    async addQuestionAnswerRow(
+        question_id: number,
+        game_id: number,
+        answer: boolean
+    ): Promise<CreateGameAnswerQuestionDto> {
         const gameQuestionAnswerServiceDto: CreateGameAnswerQuestionDto = {
             game_id: game_id,
             question_id: question_id,

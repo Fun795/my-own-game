@@ -10,10 +10,6 @@ export class QuestionDto {
     id: number;
 
     @ApiProperty()
-    @IsString()
-    title: string;
-
-    @ApiProperty()
     desc: string;
 
     @ApiProperty()
@@ -43,10 +39,6 @@ export class CheckQuestionDto {
 export class QuestionCreateDto {
     @ApiProperty()
     @IsString()
-    title: string;
-
-    @ApiProperty()
-    @IsString()
     desc: string;
 
     @ApiProperty()
@@ -70,10 +62,6 @@ export class QuestionReplaceDto {
     @ApiProperty()
     @IsInt()
     id: number;
-
-    @ApiProperty({ required: false })
-    @IsString()
-    title: string;
 
     @ApiProperty({ required: false })
     @IsString()

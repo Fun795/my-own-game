@@ -37,7 +37,7 @@ export class QuestionController {
 
         const result = await this.appService.create(params);
 
-        this.eventService.sendCreateEvent(result);
+        await this.eventService.sendCreateEvent(result);
 
         return result;
     }

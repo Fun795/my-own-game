@@ -7,9 +7,6 @@ export class Question {
     id: number;
 
     @Column()
-    title: string;
-
-    @Column()
     desc: string;
 
     @Column()
