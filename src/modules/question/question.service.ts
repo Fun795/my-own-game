@@ -73,23 +73,15 @@ export class QuestionService {
         return deleted;
     }
 
-    async create(question: QuestionCreateDto): Promise<QuestionDto> {
-        const questionReturn: Question = await this.questionRepository.save(question);
+    async create(questionCreateDto: QuestionCreateDto): Promise<QuestionDto> {
+        const topic = await this.topicRepository.findOne(questionCreateDto.topicId);
 
-        const topicQuestion = await this.topicService.topicToQuestion({
-            idQuest: questionReturn.id,
-            idTopic: Number(question.topicId)
-        });
-
-        if (question.topicId) {
-            const topic = await this.topicRepository.findOne(question.topicId);
-            if (!topic) {
-                throw new NotFoundException("topic not found by id");
-            }
-            topic.questions = topicQuestion.questions;
-            await this.topicRepository.save(topic);
+        if (!topic) {
+            throw new NotFoundException("topic not found by id");
         }
 
-        return questionReturn;
+        questionCreateDto.topic = topic;
+
+        return await this.questionRepository.save(questionCreateDto);
     }
 }

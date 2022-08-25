@@ -49,6 +49,9 @@ export class QuestionCreateDto {
     @IsInt()
     topicId: number;
 
+    @IsOptional()
+    topic: Topic;
+
     @ApiProperty()
     @IsString()
     answer: string;
