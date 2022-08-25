@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, ManyToOne, JoinColumn } from "typeorm";
 import { Topic } from "../topic/entities/topic.entity";
 
 @Entity()
@@ -16,5 +16,6 @@ export class Question {
     answer: string;
 
     @ManyToOne(() => Topic, (topic) => topic.questions)
+    @JoinColumn({ name: "topic_id" })
     topic: Topic;
 }
