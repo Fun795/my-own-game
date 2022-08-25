@@ -59,24 +59,16 @@ export class QuestionService {
         });
     }
 
-    async remove(id: number): Promise<number> {
+    async remove(id: number): Promise<void> {
         const deleted = await this.questionRepository.delete(id).then(({ affected }) => affected);
 
         if (!deleted) {
             throw new NotFoundException("Question not found by id");
         }
-
-        return deleted;
     }
 
     async create(questionCreateDto: QuestionCreateDto): Promise<QuestionDto> {
-        const topic = await this.topicRepository.findOne(questionCreateDto.topicId);
-
-        if (!topic) {
-            throw new NotFoundException("topic not found by id");
-        }
-
-        questionCreateDto.topic = topic;
+        questionCreateDto.topic = await this.topicService.findOne(questionCreateDto.topicId);
 
         const result = await this.questionRepository.save(questionCreateDto);
 

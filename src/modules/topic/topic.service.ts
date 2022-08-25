@@ -88,13 +88,11 @@ export class TopicService {
         return await this.topicRepository.save(updateTopicDto);
     }
 
-    async remove(id: number) {
+    async remove(id: number): Promise<void> {
         const deleted = await this.topicRepository.delete(id).then(({ affected }) => affected);
 
         if (!deleted) {
             throw new NotFoundException("Topic not found by id");
         }
-
-        return deleted;
     }
 }
