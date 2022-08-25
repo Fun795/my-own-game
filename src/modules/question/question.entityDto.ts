@@ -61,7 +61,7 @@ export class QuestionIdDto {
     @ApiProperty({ required: false })
     id: number;
 }
-export class QuestionReplaceDto {
+export class QuestionUpdateDto {
     @ApiProperty()
     @IsInt()
     id: number;

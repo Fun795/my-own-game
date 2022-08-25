@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/commo
 import { QuestionService } from "./question.service";
 import { Question } from "./question.entity";
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { QuestionCreateDto, QuestionDto, QuestionIdDto, QuestionReplaceDto } from "./question.entityDto";
+import { QuestionCreateDto, QuestionDto, QuestionIdDto, QuestionUpdateDto } from "./question.entityDto";
 
 @ApiTags("question")
 @Controller("question")
@@ -42,8 +42,8 @@ export class QuestionController {
         return `row id - ${status}`;
     }
 
-    @Patch("replace/:id")
-    async replaceById(@Body() questionReplace: QuestionReplaceDto): Promise<QuestionDto> {
+    @Patch("update/:id")
+    async updateById(@Body() questionReplace: QuestionUpdateDto): Promise<QuestionDto> {
         return await this.appService.update(questionReplace);
     }
 
