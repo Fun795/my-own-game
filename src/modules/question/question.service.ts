@@ -6,6 +6,7 @@ import { Question } from "./question.entity";
 import { QuestionCreateDto, QuestionDto, QuestionReplaceDto } from "./question.entityDto";
 import { Topic } from "../topic/entities/topic.entity";
 import { TopicService } from "../topic/topic.service";
+import { EventsService } from "../events/events.service";
 
 @Injectable()
 export class QuestionService {
@@ -15,6 +16,7 @@ export class QuestionService {
         @InjectRepository(Topic)
         private topicRepository: Repository<Topic>,
         private topicService: TopicService,
+        private eventService: EventsService,
         @InjectPinoLogger(QuestionService.name)
         private readonly logger: PinoLogger
     ) {}
@@ -82,6 +84,10 @@ export class QuestionService {
 
         questionCreateDto.topic = topic;
 
-        return await this.questionRepository.save(questionCreateDto);
+        const result = await this.questionRepository.save(questionCreateDto);
+
+        await this.eventService.sendCreateEvent(result);
+
+        return result;
     }
 }
