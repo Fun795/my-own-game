@@ -55,7 +55,7 @@ export class QuestionController {
 
     @Patch("replace/:id")
     async replaceById(@Body() questionReplace: QuestionReplaceDto): Promise<QuestionDto> {
-        return await this.appService.replace(questionReplace);
+        return await this.appService.update(questionReplace);
     }
 
     @Get("/findAllManyTopic/")
