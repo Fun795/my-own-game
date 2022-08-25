@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsString, Max, Min } from "class-validator";
+import { IsInt, IsOptional, IsString, Max, Min } from "class-validator";
 import { Topic } from "../topic/entities/topic.entity";
 import { Type } from "class-transformer";
 
@@ -47,7 +47,7 @@ export class QuestionCreateDto {
 
     @ApiProperty()
     @IsInt()
-    topic_id: number;
+    topicId: number;
 
     @ApiProperty()
     @IsString()
@@ -63,19 +63,23 @@ export class QuestionReplaceDto {
     @IsInt()
     id: number;
 
-    @ApiProperty({ required: false })
+    @ApiProperty()
+    @IsOptional()
     @IsString()
-    desc: string;
-
-    @ApiProperty({ required: false })
-    @IsInt()
-    point: number;
+    desc?: string;
 
     @ApiProperty()
-    @IsString()
-    answer: string;
-
-    @ApiProperty({ required: false })
+    @IsOptional()
     @IsInt()
-    topic_id: number;
+    point?: number;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    answer?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsInt()
+    topicId?: number;
 }

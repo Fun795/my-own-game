@@ -74,14 +74,14 @@ describe("Question", () => {
     });
 
     test("/POST question/. Should return 201 if order not exist and have been created", () => {
-        const question: Question = { id: 1, title: "", point: 500, answer: "", desc: "", topic_: new Topic() };
+        const question: Question = { id: 1, point: 500, answer: "", desc: "", topic: new Topic() };
         const topic: Topic = { id: 1, questions: [question], name: "" };
         jest.spyOn(repositoryMock, "save").mockResolvedValue(question);
         jest.spyOn(repositoryMock, "findOne").mockResolvedValue(topic);
 
         return request(app.getHttpServer())
             .post(`/question`)
-            .send({ title: "string", desc: "string", point: 0, topic_id: 1, answer: "string" })
+            .send({ title: "string", desc: "string", point: 0, topicId: 1, answer: "string" })
             .expect(201)
             .expect((res) => {
                 expect(res.body).toMatchObject(question);

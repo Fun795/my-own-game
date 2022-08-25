@@ -16,5 +16,5 @@ export class Question {
     answer: string;
 
     @ManyToOne(() => Topic, (topic) => topic.questions)
-    topic_: Topic;
+    topic: Topic;
 }

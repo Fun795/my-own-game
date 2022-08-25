@@ -36,29 +36,32 @@ export class QuestionService {
     }
 
     async replace(question: QuestionReplaceDto): Promise<Question> {
-        const questionToUpdate = await this.questionRepository.findOne({
-            id: question.id
+        const questionToUpdate = await this.questionRepository.findOne(question.id, {
+            relations: ["topic"]
         });
 
         if (!questionToUpdate) {
             throw new NotFoundException("question not found by id");
         }
 
-        const replaced: QuestionDto = Object.assign({}, questionToUpdate, question);
+        const replaced: QuestionReplaceDto = Object.assign({}, questionToUpdate, question);
 
         await this.questionRepository.save(replaced);
 
-        const topicQuestion: Topic | boolean = await this.topicService.topicToQuestion({
-            idQuest: Number(question.id),
-            idTopic: Number(question.topic_id)
-        });
+        if (replaced.topicId) {
+            const topicQuestion: Topic | boolean = await this.topicService.topicToQuestion({
+                idQuest: Number(replaced.id),
+                idTopic: Number(replaced.topicId)
+            });
 
-        if (question.topic_id) {
-            const topic: Topic | undefined = await this.topicRepository.findOne(question.topic_id);
-            if (topic) {
-                topic.questions = topicQuestion.questions;
-                await this.topicRepository.save(topic);
+            const topic = await this.topicRepository.findOne(replaced.topicId);
+
+            if (!topic) {
+                throw new NotFoundException("topicId not found by id");
             }
+
+            topic.questions = topicQuestion.questions;
+            await this.topicRepository.save(topic);
         }
 
         return questionToUpdate;
@@ -85,11 +88,11 @@ export class QuestionService {
 
         const topicQuestion = await this.topicService.topicToQuestion({
             idQuest: questionReturn.id,
-            idTopic: Number(question.topic_id)
+            idTopic: Number(question.topicId)
         });
 
-        if (question.topic_id) {
-            const topic = await this.topicRepository.findOne(question.topic_id);
+        if (question.topicId) {
+            const topic = await this.topicRepository.findOne(question.topicId);
             if (!topic) {
                 throw new NotFoundException("topic not found by id");
             }
