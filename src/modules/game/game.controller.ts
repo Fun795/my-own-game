@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param } from "@nestjs/common";
+import { Controller, Get, Post, Param, Body } from "@nestjs/common";
 import { GameService } from "./game.service";
 import { CreatedGameDto } from "./dto";
 import { ApiTags } from "@nestjs/swagger";
@@ -20,34 +20,11 @@ export class GameController {
         return this.gameService.findAll();
     }
 
-    @Get(":id") findOne(@Param("id") id: number): Promise<Game | undefined> {
+    @Get(":id") findOne(@Param("id") id: number): Promise<Game> {
         return this.gameService.findOne(id);
     }
 
-    @Get("processingQuestionAnswer/:game_id/:id/:answer") processingQuestionAnswer(
-        @Param() parameter: CheckQuestionDto
-    ): Promise<CreateGameAnswerQuestionDto> {
-        return this.gameService.processingQuestionAnswer(parameter.answer, parameter.id, parameter.game_id);
+    @Post("sendAnswer/:game_id/:id/:answer") sendAnswer(@Body() parameter: CheckQuestionDto): Promise<boolean> {
+        return this.gameService.sendAnswer(parameter.answer, parameter.id, parameter.game_id);
     }
-
-    //*********************************************************
-    // @Get("get/:id")
-    // async getById(@Query() questionIdDto: QuestionIdDto): Promise<Question> {
-    //     return await this.appService.findOne(questionIdDto.id);
-    // }
-    // findOne(id: number): Promise<Question> {
-    //     return this.questionRepository.findOne({ id });
-    // }
-    //*************************************************************
-
-    //
-    // @Patch(":id")
-    // update(@Param("id") id: string, @Body() updateGameDto: UpdateGameDto) {
-    //     return this.gameService.update(+id, updateGameDto);
-    // }
-    //
-    // @Delete(":id")
-    // remove(@Param("id") id: string) {
-    //     return this.gameService.remove(+id);
-    // }
 }

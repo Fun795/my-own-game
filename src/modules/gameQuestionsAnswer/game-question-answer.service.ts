@@ -4,7 +4,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { GameAnswerQuestion } from "./entities/gameAnswerQuestion.entity";
-// import { TopicService } from "../gameQuestionsAnswer/";
 
 @Injectable()
 export class GameQuestionAnswerService {
@@ -15,18 +14,8 @@ export class GameQuestionAnswerService {
         private readonly logger: PinoLogger // // private topicService: TopicService
     ) {}
 
-    async create(createAddAnswerQuestionDto: CreateGameAnswerQuestionDto): Promise<CreateGameAnswerQuestionDto> {
-        // try {
-
+    async create(createAddAnswerQuestionDto: CreateGameAnswerQuestionDto): Promise<void> {
         const resultInsert = await this.gameAnswerQuestionRepository.insert(createAddAnswerQuestionDto);
-        if (!resultInsert) {
-            throw new NotFoundException("AnswerQuestion create to db command failed");
-        }
-        const answerInserted = this.findOneToGameIdAndQuestionId(
-            createAddAnswerQuestionDto.game_id,
-            createAddAnswerQuestionDto.question_id
-        );
-        return answerInserted;
     }
 
     async findAll(): Promise<GameAnswerQuestion[]> {

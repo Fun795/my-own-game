@@ -2,9 +2,6 @@ import { Column, Entity, Generated, PrimaryColumn, PrimaryGeneratedColumn } from
 
 @Entity()
 export class GameAnswerQuestion {
-    @Generated()
-    id: number;
-
     @PrimaryColumn()
     game_id: number;
 

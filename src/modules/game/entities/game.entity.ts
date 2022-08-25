@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn } from "typeorm";
+import { GameStatus } from "../enums/statusGameEnum";
 
 @Entity()
 export class Game {
@@ -17,7 +18,7 @@ export class Game {
     updatedDate: Date;
 
     @Column({
-        default: "process"
+        default: GameStatus.Process
     })
     status: string;
 
@@ -28,5 +29,9 @@ export class Game {
 
     fillQuestions(questions: number[]): void {
         this.questions = [...questions];
+    }
+
+    checkAnswer(answer: string, userAnswer: string): boolean {
+        return answer === userAnswer.trim().toLowerCase();
     }
 }
