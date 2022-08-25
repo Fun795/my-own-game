@@ -28,7 +28,9 @@ export class QuestionService {
     }
 
     async findOne(id: number): Promise<Question> {
-        const question = await this.questionRepository.findOne({ id });
+        const question = await this.questionRepository.findOne(id, {
+            relations: ["topic"]
+        });
 
         if (!question) {
             throw new NotFoundException("question not found by id");
@@ -38,18 +40,10 @@ export class QuestionService {
     }
 
     async update(question: QuestionReplaceDto): Promise<Question> {
-        const questionToUpdate = await this.questionRepository.findOne(question.id, {
-            relations: ["topic"]
-        });
+        const questionToUpdate = await this.findOne(question.id);
 
-        if (!questionToUpdate) {
-            throw new NotFoundException("question not found by id");
-        }
-
-        const topic = await this.topicRepository.findOne(question.topicId);
-
-        if (topic) {
-            questionToUpdate.topic = topic;
+        if (question.topicId) {
+            questionToUpdate.topic = await this.topicService.findOne(question.topicId);
         }
 
         Object.assign(questionToUpdate, question);
