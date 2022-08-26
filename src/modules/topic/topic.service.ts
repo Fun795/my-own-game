@@ -74,7 +74,7 @@ export class TopicService {
         return this.topicRepository.find();
     }
 
-    async findOne(id: number) {
+    async findOne(id: number): Promise<Topic> {
         const topic = await this.topicRepository.findOne({ id });
 
         if (!topic) {
@@ -84,7 +84,7 @@ export class TopicService {
         return topic;
     }
 
-    async update(updateTopicDto: UpdateTopicDto) {
+    async update(updateTopicDto: UpdateTopicDto): Promise<Topic> {
         return await this.topicRepository.save(updateTopicDto);
     }
 

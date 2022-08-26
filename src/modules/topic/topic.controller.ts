@@ -12,7 +12,7 @@ export class TopicController {
     constructor(private readonly topicService: TopicService) {}
 
     @Get()
-    findAll() {
+    findAll(): Promise<Topic[]> {
         return this.topicService.findAll();
     }
 
