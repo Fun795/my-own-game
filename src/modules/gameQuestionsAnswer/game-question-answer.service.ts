@@ -1,4 +1,4 @@
-import { BadGatewayException, Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { CreateGameAnswerQuestionDto } from "./dto/addGameAnswerQuestion.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -11,11 +11,11 @@ export class GameQuestionAnswerService {
         @InjectRepository(GameAnswerQuestion)
         private gameAnswerQuestionRepository: Repository<GameAnswerQuestion>,
         @InjectPinoLogger(GameQuestionAnswerService.name)
-        private readonly logger: PinoLogger // // private topicService: TopicService
+        private readonly logger: PinoLogger
     ) {}
 
     async create(createAddAnswerQuestionDto: CreateGameAnswerQuestionDto): Promise<void> {
-        const resultInsert = await this.gameAnswerQuestionRepository.insert(createAddAnswerQuestionDto);
+        await this.gameAnswerQuestionRepository.insert(createAddAnswerQuestionDto);
     }
 
     async findAll(): Promise<GameAnswerQuestion[]> {

@@ -20,7 +20,7 @@ export class Game {
     @Column({
         default: GameStatus.Process
     })
-    status: string;
+    status: GameStatus;
 
     @Column({
         default: 0

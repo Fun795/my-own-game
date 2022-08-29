@@ -12,7 +12,7 @@ export class GameController {
     constructor(private readonly gameService: GameService) {}
 
     @Post()
-    async create(): Promise<CreatedGameDto> {
+    create(): Promise<CreatedGameDto> {
         return this.gameService.create();
     }
 
