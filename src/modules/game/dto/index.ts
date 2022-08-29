@@ -1,1 +1,3 @@
-export * from "./created-game.dto";
+export * from "./game.dto";
+export * from "./gameFindOneDto";
+export * from "./gameFindAllDto";

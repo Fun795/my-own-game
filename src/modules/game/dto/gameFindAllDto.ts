@@ -1,17 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class CreatedGameDto {
+export class GameFindAllDto {
     @ApiProperty()
     id: number;
 
     @ApiProperty()
-    questions: number[];
+    updatedDate: Date;
 
     @ApiProperty()
     step: number;
-
-    @ApiProperty()
-    updatedDate: Date;
 
     @ApiProperty()
     status: string;

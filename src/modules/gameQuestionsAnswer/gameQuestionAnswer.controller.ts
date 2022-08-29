@@ -18,9 +18,9 @@ export class gameQuestionAnswerController {
     findAll(): Promise<GameAnswerQuestion[]> {
         return this.gameAnswerQuestionService.findAll();
     }
-    @Get("findAllToGameId/:game_Id")
-    findAllToGameId(@Param("game_Id") id: number): Promise<GameAnswerQuestion[]> {
-        return this.gameAnswerQuestionService.findAllToGameId(id);
+    @Get("findAllByGameId/:game_Id")
+    findAllByGameId(@Param("game_Id") id: number): Promise<GameAnswerQuestion[]> {
+        return this.gameAnswerQuestionService.findAllByGameId(id);
     }
     @Get(":game_id/:question_id")
     findOneToGameIdAndQuestionId(
