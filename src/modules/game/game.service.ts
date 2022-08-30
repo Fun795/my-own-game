@@ -85,7 +85,7 @@ export class GameService {
         return game.questions.includes(question_id);
     }
     async updateGameAfterUserAnswer(game: Game, answer: boolean, updated_point: number): Promise<Game> {
-        const gameDto: Game = game.updateGameDto(game, answer, updated_point);
+        const gameDto: Game = game.updateGameDto(answer, updated_point);
 
         const updatedGame: Game = await this.gameRepository.save(gameDto);
         return updatedGame;
