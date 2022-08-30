@@ -72,7 +72,7 @@ export class QuestionService {
 
         const result = await this.questionRepository.save(questionCreateDto);
 
-        await this.eventService.sendCreateEvent(result);
+        // await this.eventService.sendCreateEvent(result);
 
         return result;
     }

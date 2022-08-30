@@ -15,6 +15,7 @@ import { loggerMock } from "../../mock/logger.mock";
 
 describe("Question", () => {
     let app: INestApplication;
+    let TopicServiceMock: TopicService;
 
     beforeAll(async () => {
         const moduleRef = await Test.createTestingModule({
@@ -26,7 +27,8 @@ describe("Question", () => {
                     useValue: {
                         topicToQuestion: () => {
                             return { questions: [new Question()] };
-                        }
+                        },
+                        findOne: jest.fn()
                     }
                 },
                 {
@@ -50,7 +52,7 @@ describe("Question", () => {
 
         app = moduleRef.createNestApplication();
         app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
-
+        TopicServiceMock = await app.resolve(TopicService);
         await app.init();
     });
 
@@ -73,8 +75,9 @@ describe("Question", () => {
     test("/POST question/. Should return 201 if order not exist and have been created", () => {
         const question: Question = { id: 1, point: 500, answer: "", desc: "", topic: new Topic() };
         const topic: Topic = { id: 1, questions: [question], name: "" };
+
         jest.spyOn(repositoryMock, "save").mockResolvedValue(question);
-        jest.spyOn(repositoryMock, "findOne").mockResolvedValue(topic);
+        jest.spyOn(TopicServiceMock, "findOne").mockResolvedValue(topic);
 
         return request(app.getHttpServer())
             .post(`/question`)
