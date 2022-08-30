@@ -11,8 +11,8 @@ import { TopicService } from "../../../src/modules/topic/topic.service";
 import { repositoryMock } from "../../mock/repository.mock";
 import { eventsServiceMock } from "../../mock/eventsService.mock";
 import { TopicController } from "../../../src/modules/topic/topic.controller";
-import { CreateTopicDto } from "../../../src/modules/topic/dto/create-topic.dto";
-import { UpdateTopicDto } from "../../../src/modules/topic/dto/update-topic.dto";
+import { TopicCreateDto } from "../../../src/modules/topic/dto/topic.create.dto";
+import { TopicUpdateDto } from "../../../src/modules/topic/dto/topic.update.dto";
 
 describe("Topic", () => {
     let app: INestApplication;
@@ -79,7 +79,7 @@ describe("Topic", () => {
 
     test("/POST topic/. Should return 201 if order not exist and have been created", () => {
         const topic: Topic = new Topic();
-        const topicSend: CreateTopicDto = { name: "asd" };
+        const topicSend: TopicCreateDto = { name: "asd" };
         jest.spyOn(repositoryMock, "findOne").mockResolvedValue(topic);
 
         return (
@@ -103,7 +103,7 @@ describe("Topic", () => {
     });
 
     test("/PATCH question/. Should return 200", () => {
-        const updateTopicDto: UpdateTopicDto = { id: 1, name: "test" };
+        const updateTopicDto: TopicUpdateDto = { id: 1, name: "test" };
         jest.spyOn(repositoryMock, "save").mockResolvedValue(updateTopicDto);
 
         return request(app.getHttpServer())

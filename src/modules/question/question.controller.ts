@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/commo
 import { QuestionService } from "./question.service";
 import { Question } from "./question.entity";
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { QuestionCreateDto, QuestionDto, QuestionIdDto, QuestionUpdateDto } from "./question.entityDto";
+import { QuestionDto, QuestionCreateDto, QuestionIdDto, QuestionUpdateDto } from "./dto";
 
 @ApiTags("question")
 @Controller("question")

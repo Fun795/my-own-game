@@ -3,7 +3,7 @@ import { BrokerAsPromised as Broker } from "rascal";
 import { EventsRoutingConfig } from "./events.routing.config";
 import { PinoLogger } from "nestjs-pino";
 import config from "../../config";
-import { QuestionDto } from "../question/question.entityDto";
+import { QuestionDto } from "../question/dto";
 
 @Injectable()
 export class EventsService {

@@ -1,9 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class TopicDto {
+export class TopicIdDto {
     @ApiProperty()
     id: number;
-
-    @ApiProperty()
-    name: string;
 }

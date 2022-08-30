@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
 import { Question } from "./question.entity";
-import { QuestionCreateDto, QuestionDto, QuestionUpdateDto } from "./question.entityDto";
+import { QuestionDto, QuestionCreateDto, QuestionUpdateDto } from "./dto";
 import { Topic } from "../topic/entities/topic.entity";
 import { TopicService } from "../topic/topic.service";
 import { EventsService } from "../events/events.service";
