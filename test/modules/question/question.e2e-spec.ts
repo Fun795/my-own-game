@@ -63,7 +63,7 @@ describe("Question", () => {
         return request(app.getHttpServer())
             .get("/question")
             .expect((res) => {
-                expect(res.body).toMatchObject(question);
+                expect(res.body).toEqual(question);
             });
     });
 
@@ -84,13 +84,15 @@ describe("Question", () => {
             .send({ title: "string", desc: "string", point: 0, topicId: 1, answer: "string" })
             .expect(201)
             .expect((res) => {
-                expect(res.body).toMatchObject(question);
+                expect(res.body).toEqual(question);
             });
     });
 
-    test("/POST question/. Should return 400 if send empty body", () => request(app.getHttpServer()).post(`/question`).send({}).expect(400));
+    test("/POST question/. Should return 400 if send empty body", () =>
+        request(app.getHttpServer()).post(`/question`).send({}).expect(400));
 
-    test("/POST question/. Should return 400 if send empty body", () => request(app.getHttpServer()).post(`/question`).send({ title: "title", desc: "test" }).expect(400));
+    test("/POST question/. Should return 400 if send empty body", () =>
+        request(app.getHttpServer()).post(`/question`).send({ title: "title", desc: "test" }).expect(400));
 
     afterAll(async () => {
         await app.close();

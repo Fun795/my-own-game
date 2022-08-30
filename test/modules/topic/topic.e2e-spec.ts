@@ -61,7 +61,7 @@ describe("Topic", () => {
         return request(app.getHttpServer())
             .get("/topic")
             .expect((res) => {
-                expect(res.body).toMatchObject(topic);
+                expect(res.body).toEqual(topic);
             });
     });
 
@@ -82,14 +82,16 @@ describe("Topic", () => {
                 // .send(topicSend) // for Body on post
                 .expect(201)
                 .expect((res) => {
-                    expect(res.body).toMatchObject(topic);
+                    expect(res.body).toEqual(topic);
                 })
         );
     });
 
-    test("/POST question/. Should return 400 if send empty body", () => request(app.getHttpServer()).post(`/topic`).send({}).expect(400));
+    test("/POST question/. Should return 400 if send empty body", () =>
+        request(app.getHttpServer()).post(`/topic`).send({}).expect(400));
 
-    test("/POST question/. Should return 400 if send empty body", () => request(app.getHttpServer()).post(`/topic`).send({ title: "title", desc: "test" }).expect(400));
+    test("/POST question/. Should return 400 if send empty body", () =>
+        request(app.getHttpServer()).post(`/topic`).send({ title: "title", desc: "test" }).expect(400));
 
     test("/PATCH question/. Should return 200", () => {
         const updateTopicDto: TopicUpdateDto = { id: 1, name: "test" };
@@ -99,7 +101,7 @@ describe("Topic", () => {
             .patch(`/topic`)
             .send(updateTopicDto)
             .expect((res) => {
-                expect(res.body).toMatchObject(updateTopicDto);
+                expect(res.body).toEqual(updateTopicDto);
             })
             .expect(200);
     });
