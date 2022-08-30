@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import { TopicService } from "./topic.service";
-import { CreateTopicDto } from "./dto/create-topic.dto";
-import { UpdateTopicDto } from "./dto/update-topic.dto";
+import { TopicCreateDto } from "./dto/topic.create.dto";
+import { TopicUpdateDto } from "./dto/topic.update.dto";
 import { ApiTags } from "@nestjs/swagger";
-import { TopicToQuestionDto } from "./dto/topic.dto";
 import { Topic } from "./entities/topic.entity";
+import { TopicToQuestionDto } from "./dto/topic.toQuestion.dto";
 
 @ApiTags("topic")
 @Controller("topic")
@@ -22,12 +22,12 @@ export class TopicController {
     }
 
     @Post()
-    create(@Query() createTopicDto: CreateTopicDto) {
+    create(@Query() createTopicDto: TopicCreateDto) {
         return this.topicService.create(createTopicDto);
     }
 
     @Patch()
-    update(@Body() updateTopicDto: UpdateTopicDto) {
+    update(@Body() updateTopicDto: TopicUpdateDto) {
         return this.topicService.update(updateTopicDto);
     }
 

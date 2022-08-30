@@ -1,7 +1,7 @@
 import { ApiProperty, PartialType } from "@nestjs/swagger";
-import { CreateTopicDto } from "./create-topic.dto";
+import { TopicCreateDto } from "./topic.create.dto";
 
-export class UpdateTopicDto {
+export class TopicUpdateDto {
     @ApiProperty()
     id: number;
 

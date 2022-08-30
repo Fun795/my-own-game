@@ -1,12 +1,13 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { CreateTopicDto } from "./dto/create-topic.dto";
-import { UpdateTopicDto } from "./dto/update-topic.dto";
+import { TopicCreateDto } from "./dto/topic.create.dto";
+import { TopicUpdateDto } from "./dto/topic.update.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Topic } from "./entities/topic.entity";
 import { Question } from "../question/question.entity";
-import { TopicIdDto, TopicToQuestionDto } from "./dto/topic.dto";
+import { TopicIdDto } from "./dto/topic.idDto";
+import { TopicToQuestionDto } from "./dto/topic.toQuestion.dto";
 
 @Injectable()
 export class TopicService {
@@ -19,7 +20,7 @@ export class TopicService {
         private readonly logger: PinoLogger
     ) {}
 
-    async create(createTopicDto: CreateTopicDto) {
+    async create(createTopicDto: TopicCreateDto) {
         return await this.topicRepository.save(createTopicDto);
     }
 
@@ -84,7 +85,7 @@ export class TopicService {
         return topic;
     }
 
-    async update(updateTopicDto: UpdateTopicDto): Promise<Topic> {
+    async update(updateTopicDto: TopicUpdateDto): Promise<Topic> {
         return await this.topicRepository.save(updateTopicDto);
     }
 

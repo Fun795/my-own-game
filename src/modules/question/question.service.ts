@@ -3,10 +3,12 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
 import { Question } from "./question.entity";
-import { QuestionCreateDto, QuestionDto, QuestionUpdateDto } from "./question.entityDto";
+import { QuestionDto } from "./dto/question.entity.dto";
 import { Topic } from "../topic/entities/topic.entity";
 import { TopicService } from "../topic/topic.service";
 import { EventsService } from "../events/events.service";
+import { QuestionCreateDto } from "./dto/question.create.dto";
+import { QuestionUpdateDto } from "./dto/question.update.dto";
 
 @Injectable()
 export class QuestionService {
