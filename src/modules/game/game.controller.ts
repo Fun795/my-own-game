@@ -1,11 +1,9 @@
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { GameService } from "./game.service";
-import { GameDto, GameFindAllDto, GameFindOneDto } from "./dto";
+import { GameDto, GameFindAllDto } from "./dto";
 import { ApiTags } from "@nestjs/swagger";
 import { QuestionCheckDto } from "../question/dto";
-import { Game } from "./entities/game.entity";
-import { CreateGameAnswerQuestionDto } from "../gameQuestionsAnswer/dto/addGameAnswerQuestion.dto";
-import { GameFindOneMapper } from "./mapper/game.mapper";
+import { mapGameToGameDto } from "./mapper/game.mapper";
 
 @ApiTags("game")
 @Controller("game")
@@ -22,9 +20,9 @@ export class GameController {
         return await this.gameService.findAll();
     }
 
-    @Get(":id") async findOne(@Param("id") id: number): Promise<GameFindOneDto> {
+    @Get(":id") async findOne(@Param("id") id: number): Promise<GameDto> {
         const game = await this.gameService.findOne(id);
-        return GameFindOneMapper(game);
+        return mapGameToGameDto(game);
     }
 
     @Post("sendAnswer/:game_id/:id/:answer") sendAnswer(@Body() parameter: QuestionCheckDto): Promise<boolean> {

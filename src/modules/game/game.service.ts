@@ -9,8 +9,8 @@ import { GameQuestionAnswerService } from "../gameQuestionsAnswer/game-question-
 import { QuestionService } from "../question/question.service";
 import { NotAcceptableException } from "@nestjs/common/exceptions/not-acceptable.exception";
 import { GameStatus } from "./enums/statusGameEnum";
-import { GameDto, GameFindAllDto, GameFindOneDto } from "./dto";
-import { GameFindOneMapper, GameMapperCreate, GameMapperFindAll } from "./mapper/game.mapper";
+import { GameDto, GameFindAllDto } from "./dto";
+import { mapGameToGameDto, mapGameToGameCreateDto, mapGameToGameFindAllDto } from "./mapper/game.mapper";
 
 @Injectable()
 export class GameService {
@@ -31,14 +31,14 @@ export class GameService {
         game.fillQuestions(questions);
         const createdGame = await this.gameRepository.save(game);
 
-        const createdGameDto: GameDto = GameMapperCreate(createdGame);
+        const createdGameDto: GameDto = mapGameToGameCreateDto(createdGame);
 
         return createdGameDto;
     }
 
     async findAll(): Promise<GameFindAllDto[]> {
         const games: Game[] = await this.gameRepository.find({ order: { updatedDate: "DESC" } });
-        const gameArray: GameFindAllDto[] = GameMapperFindAll(games);
+        const gameArray: GameFindAllDto[] = mapGameToGameFindAllDto(games);
 
         return gameArray;
     }

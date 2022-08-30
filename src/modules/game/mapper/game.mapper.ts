@@ -1,7 +1,7 @@
 import { Game } from "../entities/game.entity";
-import { GameDto, GameFindAllDto, GameFindOneDto } from "../dto";
+import { GameDto, GameFindAllDto } from "../dto";
 
-export function GameMapperCreate(game: Game): GameDto {
+export function mapGameToGameCreateDto(game: Game): GameDto {
     const createdGameDto: GameDto = new GameDto();
 
     createdGameDto.id = game.id;
@@ -10,24 +10,17 @@ export function GameMapperCreate(game: Game): GameDto {
     return createdGameDto;
 }
 
-export function GameMapperFindAll(gameArray: Game[]): GameFindAllDto[] {
-    const GameArrayMapped = [];
-
-    gameArray.forEach((elem) => {
-        const findAllGameDto: GameFindAllDto = new GameFindAllDto();
-        findAllGameDto.id = elem.id;
-        findAllGameDto.status = elem.status;
-        findAllGameDto.step = elem.step;
-        findAllGameDto.updatedDate = elem.updatedDate;
-        findAllGameDto.total_score = elem.total_score;
-
-        GameArrayMapped.push(findAllGameDto);
-    });
-
-    return GameArrayMapped;
+export function mapGameToGameFindAllDto(gameArray: Game[]): GameFindAllDto[] {
+    return gameArray.map((elem: GameFindAllDto) => ({
+        id: elem.id,
+        status: elem.status,
+        step: elem.step,
+        updatedDate: elem.updatedDate,
+        total_score: elem.total_score
+    }));
 }
 
-export function GameFindOneMapper(game: Game): GameFindOneDto {
+export function mapGameToGameDto(game: Game): GameDto {
     const createdGameDto: GameDto = new GameDto();
 
     createdGameDto.id = game.id;
