@@ -30,14 +30,14 @@ export class GameQuestionAnswerService {
 
     findAllByGameId(game_id: number): Promise<GameAnswerQuestion[]> {
         return this.gameAnswerQuestionRepository.find({
-            game_id: game_id
+            game_id
         });
     }
 
     async checkAnswerToGameIdAndQuestionId(game_id: number, question_id: number): Promise<void> {
         const answer = await this.gameAnswerQuestionRepository.findOne({
-            game_id: game_id,
-            question_id: question_id
+            game_id,
+            question_id
         });
         if (answer) {
             throw new BadRequestException(

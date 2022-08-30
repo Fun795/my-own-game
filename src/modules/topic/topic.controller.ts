@@ -16,7 +16,7 @@ export class TopicController {
 
     @Get(":id")
     findOne(@Param("id") id: string) {
-        return this.topicService.findOne(+id);
+        return this.topicService.findOne(Number(id));
     }
 
     @Post()
@@ -31,7 +31,7 @@ export class TopicController {
 
     @Delete(":id")
     remove(@Param("id") id: string) {
-        return this.topicService.remove(+id);
+        return this.topicService.remove(Number(id));
     }
 
     @Post("findAllManyTopic")

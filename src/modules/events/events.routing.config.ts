@@ -1,7 +1,7 @@
 import config from "../../config";
 
-const amqpConfig = config.amqpConfig;
-const questionEvents = config.amqpConfig.questionEvents;
+const {amqpConfig} = config;
+const {questionEvents} = config.amqpConfig;
 
 export class EventsRoutingConfig {
     public Config: Record<string, any>;

@@ -25,7 +25,7 @@ describe("Question", () => {
                 {
                     provide: TopicService,
                     useValue: {
-                        topicToQuestion: () => {
+                        topicToQuestion() {
                             return { questions: [new Question()] };
                         },
                         findOne: jest.fn()
@@ -88,13 +88,9 @@ describe("Question", () => {
             });
     });
 
-    test("/POST question/. Should return 400 if send empty body", () => {
-        return request(app.getHttpServer()).post(`/question`).send({}).expect(400);
-    });
+    test("/POST question/. Should return 400 if send empty body", () => request(app.getHttpServer()).post(`/question`).send({}).expect(400));
 
-    test("/POST question/. Should return 400 if send empty body", () => {
-        return request(app.getHttpServer()).post(`/question`).send({ title: "title", desc: "test" }).expect(400);
-    });
+    test("/POST question/. Should return 400 if send empty body", () => request(app.getHttpServer()).post(`/question`).send({ title: "title", desc: "test" }).expect(400));
 
     afterAll(async () => {
         await app.close();

@@ -87,13 +87,9 @@ describe("Topic", () => {
         );
     });
 
-    test("/POST question/. Should return 400 if send empty body", () => {
-        return request(app.getHttpServer()).post(`/topic`).send({}).expect(400);
-    });
+    test("/POST question/. Should return 400 if send empty body", () => request(app.getHttpServer()).post(`/topic`).send({}).expect(400));
 
-    test("/POST question/. Should return 400 if send empty body", () => {
-        return request(app.getHttpServer()).post(`/topic`).send({ title: "title", desc: "test" }).expect(400);
-    });
+    test("/POST question/. Should return 400 if send empty body", () => request(app.getHttpServer()).post(`/topic`).send({ title: "title", desc: "test" }).expect(400));
 
     test("/PATCH question/. Should return 200", () => {
         const updateTopicDto: TopicUpdateDto = { id: 1, name: "test" };

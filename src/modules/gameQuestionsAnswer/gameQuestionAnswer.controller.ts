@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Param } from "@nestjs/common";
 import { GameQuestionAnswerService } from "./game-question-answer.service";
 import { ApiTags } from "@nestjs/swagger";
-import { GameAnswerQuestion } from "../gameQuestionsAnswer/entities/gameAnswerQuestion.entity";
+import { GameAnswerQuestion } from "./entities/gameAnswerQuestion.entity";
 import { CreateGameAnswerQuestionDto } from "./dto/addGameAnswerQuestion.dto";
 import { GetGameAnswerQuestionsByGameIdAndQuestionDto } from "./dto/byGameIdAndQuestionId.dto";
 @ApiTags("answerQuestions")

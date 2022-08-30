@@ -26,7 +26,7 @@ describe("QuestionController", () => {
     });
 
     describe("findAll", () => {
-        it("should return an array of cats", async () => {
+        test("should return an array of cats", async () => {
             const result = ["test"];
             jest.spyOn(questionService, "findAll").mockImplementation(() => result);
 
