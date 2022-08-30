@@ -4,6 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { GameAnswerQuestion } from "./entities/gameAnswerQuestion.entity";
+import { BadRequestException } from "@nestjs/common/exceptions/bad-request.exception";
 
 @Injectable()
 export class GameQuestionAnswerService {
@@ -15,15 +16,11 @@ export class GameQuestionAnswerService {
     ) {}
 
     async create(createAddAnswerQuestionDto: CreateGameAnswerQuestionDto): Promise<void> {
-        const answer = await this.findOneToGameIdAndQuestionId(
+        await this.checkAnswerToGameIdAndQuestionId(
             createAddAnswerQuestionDto.game_id,
             createAddAnswerQuestionDto.question_id
         );
-        if (answer) {
-            throw new NotFoundException(
-                `In this game, the answer to the question with id ${createAddAnswerQuestionDto.question_id} has already been given`
-            );
-        }
+
         await this.gameAnswerQuestionRepository.insert(createAddAnswerQuestionDto);
     }
 
@@ -37,10 +34,15 @@ export class GameQuestionAnswerService {
         });
     }
 
-    findOneToGameIdAndQuestionId(game_id: number, question_id: number): Promise<GameAnswerQuestion> {
-        return this.gameAnswerQuestionRepository.findOne({
+    async checkAnswerToGameIdAndQuestionId(game_id: number, question_id: number): Promise<void> {
+        const answer = await this.gameAnswerQuestionRepository.findOne({
             game_id: game_id,
             question_id: question_id
         });
+        if (answer) {
+            throw new BadRequestException(
+                `In this game, the answer to the question with id ${game_id} has already been given`
+            );
+        }
     }
 }

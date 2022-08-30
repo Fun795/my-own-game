@@ -22,10 +22,4 @@ export class gameQuestionAnswerController {
     findAllByGameId(@Param("game_Id") id: number): Promise<GameAnswerQuestion[]> {
         return this.gameAnswerQuestionService.findAllByGameId(id);
     }
-    @Get(":game_id/:question_id")
-    findOneToGameIdAndQuestionId(
-        @Param() parameter: GetGameAnswerQuestionsByGameIdAndQuestionDto
-    ): Promise<GameAnswerQuestion> {
-        return this.gameAnswerQuestionService.findOneToGameIdAndQuestionId(parameter.game_id, parameter.question_id);
-    }
 }

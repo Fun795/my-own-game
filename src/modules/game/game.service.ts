@@ -47,8 +47,9 @@ export class GameService {
         const game = await this.gameRepository.findOne({ id });
 
         if (!game) {
-            throw new NotFoundException(`game not found by id ${game.id}`);
+            throw new NotFoundException(`game not found by id ${id}`);
         }
+
         return game;
     }
 
