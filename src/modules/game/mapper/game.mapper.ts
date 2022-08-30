@@ -11,7 +11,7 @@ export function mapGameToGameCreateDto(game: Game): GameDto {
 }
 
 export function mapGameToGameFindAllDto(gameArray: Game[]): GameFindAllDto[] {
-    return gameArray.map((elem: GameFindAllDto) => ({
+    return gameArray.map((elem) => ({
         id: elem.id,
         status: elem.status,
         step: elem.step,

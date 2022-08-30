@@ -34,13 +34,12 @@ export class Game {
     checkAnswer(answer: string, userAnswer: string): boolean {
         return answer === userAnswer.trim().toLowerCase();
     }
-    updateGameDto(answer: boolean, updated_point: number): Game {
+    updateGameDto(answer: boolean, updated_point: number): void {
         this.total_score += answer ? updated_point : 0;
         this.step++;
 
         if (this.step >= 25) {
             this.status = GameStatus.Finished;
         }
-        return this;
     }
 }
