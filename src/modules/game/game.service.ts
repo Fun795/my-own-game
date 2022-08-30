@@ -9,6 +9,8 @@ import { GameQuestionAnswerService } from "../gameQuestionsAnswer/game-question-
 import { QuestionService } from "../question/question.service";
 import { NotAcceptableException } from "@nestjs/common/exceptions/not-acceptable.exception";
 import { GameStatus } from "./enums/statusGameEnum";
+import { GameDto, GameFindAllDto, GameFindOneDto } from "./dto";
+import { GameFindOneMapper, GameMapperCreate, GameMapperFindAll } from "./mapper/game.mapper";
 
 @Injectable()
 export class GameService {
@@ -22,16 +24,23 @@ export class GameService {
         private readonly logger: PinoLogger
     ) {}
 
-    async create(): Promise<Game> {
+    async create(): Promise<GameDto> {
         const game = this.gameRepository.create();
         const questions = await this.topicService.generateBoard();
 
         game.fillQuestions(questions);
-        return this.gameRepository.save(game);
+        const createdGame = await this.gameRepository.save(game);
+
+        const createdGameDto: GameDto = GameMapperCreate(createdGame);
+
+        return createdGameDto;
     }
 
-    findAll(): Promise<Game[]> {
-        return this.gameRepository.find({ select: ["id", "updatedDate"], order: { updatedDate: "DESC" } });
+    async findAll(): Promise<GameFindAllDto[]> {
+        const games: Game[] = await this.gameRepository.find({ order: { updatedDate: "DESC" } });
+        const gameArray: GameFindAllDto[] = GameMapperFindAll(games);
+
+        return gameArray;
     }
 
     async findOne(id: number): Promise<Game> {
@@ -46,11 +55,7 @@ export class GameService {
     async sendAnswer(answer: string, question_id: number, game_id: number): Promise<boolean> {
         const question: Question | undefined = await this.questionService.findOne(question_id);
 
-        if (!question) {
-            throw new NotFoundException(`id question ${question_id} does not exist`);
-        }
-
-        const game: Game | undefined = await this.gameRepository.findOne(game_id);
+        const game: Game = await this.findOne(game_id);
 
         const isRelatedToGame: boolean = this.checkAnswerInGame(question_id, game);
 
@@ -79,14 +84,9 @@ export class GameService {
         return game.questions.includes(question_id);
     }
     async updateGameAfterUserAnswer(game: Game, answer: boolean, updated_point: number): Promise<Game> {
-        game.total_score += answer ? updated_point : 0;
-        game.step++;
+        const gameDto: Game = game.updateGameDto(game, answer, updated_point);
 
-        if (game.step >= 25) {
-            game.status = GameStatus.Finished;
-        }
-
-        const updatedGame: Game = await this.gameRepository.save(game);
+        const updatedGame: Game = await this.gameRepository.save(gameDto);
         return updatedGame;
     }
 }

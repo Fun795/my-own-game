@@ -34,4 +34,13 @@ export class Game {
     checkAnswer(answer: string, userAnswer: string): boolean {
         return answer === userAnswer.trim().toLowerCase();
     }
+    updateGameDto(game: Game, answer: boolean, updated_point: number): Game {
+        game.total_score += answer ? updated_point : 0;
+        game.step++;
+
+        if (game.step >= 25) {
+            game.status = GameStatus.Finished;
+        }
+        return game;
+    }
 }

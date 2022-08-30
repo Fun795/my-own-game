@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateGameAnswerQuestionDto } from "./dto/addGameAnswerQuestion.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -15,6 +15,15 @@ export class GameQuestionAnswerService {
     ) {}
 
     async create(createAddAnswerQuestionDto: CreateGameAnswerQuestionDto): Promise<void> {
+        const answer = await this.findOneToGameIdAndQuestionId(
+            createAddAnswerQuestionDto.game_id,
+            createAddAnswerQuestionDto.question_id
+        );
+        if (answer) {
+            throw new NotFoundException(
+                `In this game, the answer to the question with id ${createAddAnswerQuestionDto.question_id} has already been given`
+            );
+        }
         await this.gameAnswerQuestionRepository.insert(createAddAnswerQuestionDto);
     }
 
@@ -22,7 +31,7 @@ export class GameQuestionAnswerService {
         return await this.gameAnswerQuestionRepository.find({});
     }
 
-    findAllToGameId(game_id: number): Promise<GameAnswerQuestion[]> {
+    findAllByGameId(game_id: number): Promise<GameAnswerQuestion[]> {
         return this.gameAnswerQuestionRepository.find({
             game_id: game_id
         });
