@@ -1,13 +1,10 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { TopicCreateDto } from "./dto/topic.create.dto";
-import { TopicUpdateDto } from "./dto/topic.update.dto";
+import { TopicCreateDto, TopicUpdateDto, TopicToQuestionDto } from "./dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Topic } from "./entities/topic.entity";
 import { Question } from "../question/question.entity";
-import { TopicIdDto } from "./dto/topic.idDto";
-import { TopicToQuestionDto } from "./dto/topic.toQuestion.dto";
 
 @Injectable()
 export class TopicService {

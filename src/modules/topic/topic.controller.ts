@@ -1,10 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import { TopicService } from "./topic.service";
-import { TopicCreateDto } from "./dto/topic.create.dto";
-import { TopicUpdateDto } from "./dto/topic.update.dto";
+import { TopicCreateDto, TopicUpdateDto, TopicToQuestionDto } from "./dto";
 import { ApiTags } from "@nestjs/swagger";
 import { Topic } from "./entities/topic.entity";
-import { TopicToQuestionDto } from "./dto/topic.toQuestion.dto";
 
 @ApiTags("topic")
 @Controller("topic")
