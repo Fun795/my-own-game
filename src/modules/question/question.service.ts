@@ -53,12 +53,6 @@ export class QuestionService {
         return questionToUpdate;
     }
 
-    async findAllManyTopic(): Promise<Question[]> {
-        return await this.questionRepository.find({
-            relations: ["topics"]
-        });
-    }
-
     async remove(id: number): Promise<void> {
         const deleted = await this.questionRepository.delete(id).then(({ affected }) => affected);
 

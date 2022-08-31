@@ -26,7 +26,7 @@ export class GameService {
 
     async create(): Promise<GameDto> {
         const game = this.gameRepository.create();
-        const questions = await this.topicService.generateBoard();
+        const questions = await this.generateBoard();
 
         game.fillQuestions(questions);
         const createdGame = await this.gameRepository.save(game);
@@ -84,9 +84,36 @@ export class GameService {
 
         return game.questions.includes(question_id);
     }
+
     async updateGameAfterUserAnswer(game: Game, answer: boolean, updated_point: number): Promise<Game> {
         game.updateGameDto(answer, updated_point);
         const updatedGame: Game = await this.gameRepository.save(game);
         return updatedGame;
+    }
+
+    async generateBoard(): Promise<number[]> {
+        const pullQuestionPoint = [100, 200, 300, 400, 500];
+        const board = {};
+        const ids = [];
+
+        const topics = await this.topicService.findAllManyTopic();
+        const randFiveTopic = topics.sort(() => Math.random() - 0.5).slice(0, 5);
+
+        for (const topic of randFiveTopic) {
+            const randQuestion = topic.questions.sort(() => Math.random() - 0.5);
+
+            // board[topic.name] = [];
+
+            for (const point of pullQuestionPoint) {
+                const questFindRandOnPoint = randQuestion.find((question) => question.point === point);
+
+                // board[topic.name].push(questFindRandOnPoint);
+                if (questFindRandOnPoint) {
+                    ids.push(questFindRandOnPoint.id);
+                }
+            }
+        }
+
+        return ids;
     }
 }

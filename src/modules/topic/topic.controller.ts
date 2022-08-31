@@ -38,14 +38,4 @@ export class TopicController {
     findAllManyTopic(): Promise<Topic[]> {
         return this.topicService.findAllManyTopic();
     }
-
-    @Post("manyToMany")
-    manyToMany(@Query() manyToMany: TopicToQuestionDto) {
-        return this.topicService.topicToQuestion(manyToMany);
-    }
-
-    @Post("/generateBoard/")
-    async generateBoard(): Promise<any> {
-        return await this.topicService.generateBoard();
-    }
 }

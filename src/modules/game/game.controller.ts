@@ -28,4 +28,9 @@ export class GameController {
     @Post("sendAnswer/:game_id/:id/:answer") sendAnswer(@Body() parameter: QuestionCheckDto): Promise<boolean> {
         return this.gameService.sendAnswer(parameter.answer, parameter.id, parameter.game_id);
     }
+
+    @Post("/generateBoard/")
+    async generateBoard(): Promise<any> {
+        return await this.gameService.generateBoard();
+    }
 }

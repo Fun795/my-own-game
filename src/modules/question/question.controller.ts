@@ -7,16 +7,16 @@ import { QuestionDto, QuestionCreateDto, QuestionIdDto, QuestionUpdateDto } from
 @ApiTags("question")
 @Controller("question")
 export class QuestionController {
-    constructor(private readonly appService: QuestionService) {}
+    constructor(private readonly questionService: QuestionService) {}
 
     @Get()
     async getAll(): Promise<Question[]> {
-        return await this.appService.findAll();
+        return await this.questionService.findAll();
     }
 
     @Get(":id")
     async getById(@Param() questionIdDto: QuestionIdDto): Promise<QuestionDto> {
-        return await this.appService.findOne(questionIdDto.id);
+        return await this.questionService.findOne(questionIdDto.id);
     }
 
     @Post("")
@@ -28,7 +28,7 @@ export class QuestionController {
         type: Question
     })
     async create(@Body() params: QuestionCreateDto): Promise<QuestionDto> {
-        return await this.appService.create(params);
+        return await this.questionService.create(params);
     }
 
     @Delete(":id")
@@ -37,18 +37,13 @@ export class QuestionController {
         description: "Order not found by number"
     })
     async delete(@Param("id") id: number): Promise<string> {
-        const status = await this.appService.remove(id);
+        const status = await this.questionService.remove(id);
 
         return `row id - ${status}`;
     }
 
     @Patch("update/:id")
     async updateById(@Body() questionReplace: QuestionUpdateDto): Promise<QuestionDto> {
-        return await this.appService.update(questionReplace);
-    }
-
-    @Get("/findAllManyTopic/")
-    async findAllManyTopic(): Promise<Question[]> {
-        return await this.appService.findAllManyTopic();
+        return await this.questionService.update(questionReplace);
     }
 }

@@ -21,51 +21,10 @@ export class TopicService {
         return await this.topicRepository.save(createTopicDto);
     }
 
-    async topicToQuestion(manyToMany: TopicToQuestionDto): Promise<Topic> {
-        const topic: Topic | undefined = await this.topicRepository.findOne({ id: manyToMany.idTopic });
-        const question: Question | undefined = await this.questionRepository.findOne({ id: manyToMany.idQuest });
-
-        const topicMany: Topic | undefined = await this.topicRepository.findOne(manyToMany.idTopic, {
-            relations: ["questions"]
-        });
-        if (!topic || !question || !topicMany) {
-            return new Topic();
-        }
-        topic.questions = [question, ...topicMany.questions];
-
-        return await this.topicRepository.save(topic);
-    }
-
     findAllManyTopic() {
         return this.topicRepository.find({
             relations: ["questions"]
         });
-    }
-
-    async generateBoard(): Promise<number[]> {
-        const pullQuestionPoint = [100, 200, 300, 400, 500];
-        const board = {};
-        const ids = [];
-
-        const topics = await this.findAllManyTopic();
-        const randFiveTopic = topics.sort(() => Math.random() - 0.5).slice(0, 5);
-
-        for (const topic of randFiveTopic) {
-            const randQuestion = topic.questions.sort(() => Math.random() - 0.5);
-
-            // board[topic.name] = [];
-
-            for (const point of pullQuestionPoint) {
-                const questFindRandOnPoint = randQuestion.find((question) => question.point === point);
-
-                // board[topic.name].push(questFindRandOnPoint);
-                if (questFindRandOnPoint) {
-                    ids.push(questFindRandOnPoint.id);
-                }
-            }
-        }
-
-        return ids;
     }
 
     findAll() {
