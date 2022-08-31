@@ -1,7 +1,15 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 import { QuestionService } from "./question.service";
 import { Question } from "./question.entity";
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import {
+    ApiAcceptedResponse,
+    ApiBadRequestResponse,
+    ApiCreatedResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiOperation,
+    ApiTags
+} from "@nestjs/swagger";
 import { QuestionDto, QuestionCreateDto, QuestionIdDto, QuestionUpdateDto } from "./dto";
 
 @ApiTags("question")
@@ -10,13 +18,18 @@ export class QuestionController {
     constructor(private readonly questionService: QuestionService) {}
 
     @Get()
+    @ApiOkResponse({})
     async getAll(): Promise<Question[]> {
         return await this.questionService.findAll();
     }
 
     @Get(":id")
-    async getById(@Param() questionIdDto: QuestionIdDto): Promise<QuestionDto> {
-        return await this.questionService.findOne(questionIdDto.id);
+    @ApiNotFoundResponse({
+        description: "Question not found by number id"
+    })
+    @ApiOkResponse()
+    async getById(@Param("id") id: number): Promise<QuestionDto> {
+        return await this.questionService.findOne(id);
     }
 
     @Post("")
@@ -34,8 +47,9 @@ export class QuestionController {
     @Delete(":id")
     @ApiOperation({ operationId: "removeQuestion" })
     @ApiNotFoundResponse({
-        description: "Order not found by number"
+        description: "Question not found by number id"
     })
+    @ApiOkResponse({ description: "Success remove" })
     async delete(@Param("id") id: number): Promise<string> {
         const status = await this.questionService.remove(id);
 
@@ -43,6 +57,10 @@ export class QuestionController {
     }
 
     @Patch("update/:id")
+    @ApiNotFoundResponse({
+        description: "Question not found by number id"
+    })
+    @ApiOkResponse({ description: "Success update" })
     async updateById(@Body() questionReplace: QuestionUpdateDto): Promise<QuestionDto> {
         return await this.questionService.update(questionReplace);
     }
