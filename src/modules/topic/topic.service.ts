@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { TopicCreateDto, TopicUpdateDto, TopicToQuestionDto } from "./dto";
+import { TopicReateDto, TopicUpdateDto, TopicToQuestionDto } from "./dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
@@ -17,7 +17,7 @@ export class TopicService {
         private readonly logger: PinoLogger
     ) {}
 
-    async create(createTopicDto: TopicCreateDto) {
+    async create(createTopicDto: TopicReateDto) {
         return await this.topicRepository.save(createTopicDto);
     }
 
