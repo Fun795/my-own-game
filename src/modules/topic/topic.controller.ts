@@ -30,8 +30,8 @@ export class TopicController {
     }
 
     @Delete(":id")
-    remove(@Param("id") id: string) {
-        return this.topicService.remove(Number(id));
+    remove(@Param("id") id: number) {
+        return this.topicService.remove(id);
     }
 
     @Post("findAllManyTopic")
