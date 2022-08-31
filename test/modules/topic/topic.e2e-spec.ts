@@ -12,7 +12,7 @@ import { repositoryMock } from "../../mock/repository.mock";
 import { eventsServiceMock } from "../../mock/eventsService.mock";
 import { TopicController } from "../../../src/modules/topic/topic.controller";
 import { TopicReateDto } from "../../../src/modules/topic/dto/topicСreate.dto";
-import { TopicUpdateDto } from "../../../src/modules/topic/dto/topicСupdate.dto";
+import { TopicUpdateDto } from "../../../src/modules/topic/dto/topicUpdate.dto";
 import { loggerMock } from "../../mock/logger.mock";
 
 describe("Topic", () => {
