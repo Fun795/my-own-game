@@ -12,6 +12,7 @@ import { TopicService } from "../../../src/modules/topic/topic.service";
 import { repositoryMock } from "../../mock/repository.mock";
 import { eventsServiceMock } from "../../mock/eventsService.mock";
 import { loggerMock } from "../../mock/logger.mock";
+import { GameAnswerQuestion } from "../../../src/modules/gameQuestionsAnswer/entities/gameAnswerQuestion.entity";
 
 describe("Question", () => {
     let app: INestApplication;
@@ -73,7 +74,14 @@ describe("Question", () => {
     });
 
     test("/POST question/. Should return 201 if order not exist and have been created", () => {
-        const question: Question = { id: 1, point: 500, answer: "", desc: "", topic: new Topic() };
+        const question: Question = {
+            id: 1,
+            point: 500,
+            answer: "",
+            desc: "",
+            topic: new Topic(),
+            gameAnswerQuestion: [new GameAnswerQuestion()]
+        };
         const topic: Topic = { id: 1, questions: [question], name: "" };
 
         jest.spyOn(repositoryMock, "save").mockResolvedValue(question);

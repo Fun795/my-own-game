@@ -3,7 +3,7 @@ import { Test } from "@nestjs/testing";
 import { GameService } from "../../../src/modules/game/game.service";
 import { GameController } from "../../../src/modules/game/game.controller";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
-import { mockGameModel as fakeGameModel } from "./mock/GameModelMock";
+//import { mockGameModel as fakeGameModel } from "./mock/GameModelMock";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { getLoggerToken, PinoLogger } from "nestjs-pino";
 // import { EventsService } from "../../../src/modules/events/events.service";
@@ -21,6 +21,7 @@ import { eventsServiceMock } from "../../mock/eventsService.mock";
 import { GameAnswerQuestion } from "../../../src/modules/gameQuestionsAnswer/entities/gameAnswerQuestion.entity";
 describe("Game", () => {
     let app: INestApplication;
+    let gameServiceMock: GameService;
 
     beforeAll(async () => {
         const moduleRef = await Test.createTestingModule({
@@ -65,7 +66,7 @@ describe("Game", () => {
 
         app = moduleRef.createNestApplication();
         app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
-
+        gameServiceMock = await app.resolve(GameService);
         await app.init();
     });
     test("111", () => {
@@ -73,6 +74,20 @@ describe("Game", () => {
         const x = 1 + 1;
         expect(x).toBe(2);
     });
+
+    test("/POST generateBoard/. Should return 201", () => {
+        const mockResult = [1, 2, 3];
+        jest.spyOn(gameServiceMock, "generateBoard").mockResolvedValue(mockResult);
+
+        return request(app.getHttpServer())
+            .post(`/game/generateBoard`)
+            .send()
+            .expect((res) => {
+                expect(res.body).toEqual(mockResult);
+            })
+            .expect(201);
+    });
+
     // test(`/GET questions`, () => {
     //     const question = new Question();
     //     jest.spyOn(repositoryMock, "find").mockResolvedValue(new Question());

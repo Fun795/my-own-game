@@ -11,8 +11,7 @@ import { TopicService } from "../../../src/modules/topic/topic.service";
 import { repositoryMock } from "../../mock/repository.mock";
 import { eventsServiceMock } from "../../mock/eventsService.mock";
 import { TopicController } from "../../../src/modules/topic/topic.controller";
-import { TopicCreateDto } from "../../../src/modules/topic/dto/topicСreate.dto";
-import { TopicUpdateDto } from "../../../src/modules/topic/dto/topicUpdate.dto";
+import { TopicCreateDto, TopicUpdateDto } from "../../../src/modules/topic/dto";
 import { loggerMock } from "../../mock/logger.mock";
 
 describe("Topic", () => {
@@ -122,19 +121,6 @@ describe("Topic", () => {
         });
 
         return request(app.getHttpServer()).delete(`/topic/11`).expect(404);
-    });
-
-    test("/POST generateBoard/. Should return 201", () => {
-        const mockResult = [1, 2, 3];
-        jest.spyOn(TopicServiceMock, "generateBoard").mockResolvedValue(mockResult);
-
-        return request(app.getHttpServer())
-            .post(`/topic/generateBoard`)
-            .send()
-            .expect((res) => {
-                expect(res.body).toEqual(mockResult);
-            })
-            .expect(201);
     });
 
     afterAll(async () => {
