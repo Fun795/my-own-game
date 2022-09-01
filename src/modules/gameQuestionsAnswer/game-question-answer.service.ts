@@ -15,34 +15,32 @@ export class GameQuestionAnswerService {
         private readonly logger: PinoLogger
     ) {}
 
-    async create(createAddAnswerQuestionDto: CreateGameAnswerQuestionDto): Promise<void> {
-        await this.checkAnswerToGameIdAndQuestionId(
-            createAddAnswerQuestionDto.game_id,
-            createAddAnswerQuestionDto.question_id
-        );
-
-        await this.gameAnswerQuestionRepository.insert(createAddAnswerQuestionDto);
-    }
+    // async create(createAddAnswerQuestionDto: CreateGameAnswerQuestionDto): Promise<void> {
+    //     await this.checkAnswerToGameIdAndQuestionId(
+    //         createAddAnswerQuestionDto.game_id,
+    //         createAddAnswerQuestionDto.question_id
+    //     );
+    //
+    //     await this.gameAnswerQuestionRepository.insert(createAddAnswerQuestionDto);
+    // }
 
     async findAll(): Promise<GameAnswerQuestion[]> {
         return await this.gameAnswerQuestionRepository.find({});
     }
 
-    findAllByGameId(game_id: number): Promise<GameAnswerQuestion[]> {
-        return this.gameAnswerQuestionRepository.find({
-            game_id
-        });
+    findAllByGameId(gameId: number): Promise<GameAnswerQuestion[]> {
+        return this.gameAnswerQuestionRepository.find({ relations: ["questionId"] });
     }
 
-    async checkAnswerToGameIdAndQuestionId(game_id: number, question_id: number): Promise<void> {
-        const answer = await this.gameAnswerQuestionRepository.findOne({
-            game_id,
-            question_id
-        });
-        if (answer) {
-            throw new BadRequestException(
-                `In this game, the answer to the question with id ${game_id} has already been given`
-            );
-        }
-    }
+    // async checkAnswerToGameIdAndQuestionId(game_id: number, question_id: number): Promise<void> {
+    //     const answer = await this.gameAnswerQuestionRepository.findOne({
+    //         game_id,
+    //         question_id
+    //     });
+    //     if (answer) {
+    //         throw new BadRequestException(
+    //             `In this game, the answer to the question with id ${game_id} has already been given`
+    //         );
+    //     }
+    // }
 }

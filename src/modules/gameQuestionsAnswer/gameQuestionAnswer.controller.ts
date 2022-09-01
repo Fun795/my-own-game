@@ -9,10 +9,10 @@ import { GetGameAnswerQuestionsByGameIdAndQuestionDto } from "./dto/byGameIdAndQ
 export class gameQuestionAnswerController {
     constructor(private readonly gameAnswerQuestionService: GameQuestionAnswerService) {}
 
-    @Post()
-    createAnswer(@Body() createAnswerQuestionDto: CreateGameAnswerQuestionDto): Promise<void> {
-        return this.gameAnswerQuestionService.create(createAnswerQuestionDto);
-    }
+    // @Post()
+    // createAnswer(@Body() createAnswerQuestionDto: CreateGameAnswerQuestionDto): Promise<void> {
+    //     return this.gameAnswerQuestionService.create(createAnswerQuestionDto);
+    // }
 
     @Get()
     findAll(): Promise<GameAnswerQuestion[]> {

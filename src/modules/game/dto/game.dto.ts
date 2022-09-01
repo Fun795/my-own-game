@@ -1,11 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Question } from "../../question/question.entity";
 
 export class GameDto {
     @ApiProperty()
     id: number;
 
     @ApiProperty()
-    questions: number[];
+    questions: Question[];
 
     @ApiProperty()
     step: number;
@@ -14,5 +15,5 @@ export class GameDto {
     status: string;
 
     @ApiProperty()
-    total_score: number;
+    totalScore: number;
 }

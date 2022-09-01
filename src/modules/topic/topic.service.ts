@@ -28,6 +28,7 @@ export class TopicService {
         const topicMany: Topic | undefined = await this.topicRepository.findOne(manyToMany.idTopic, {
             relations: ["questions"]
         });
+
         if (!topic || !question || !topicMany) {
             return new Topic();
         }
@@ -45,7 +46,7 @@ export class TopicService {
     async generateBoard(): Promise<number[]> {
         const pullQuestionPoint = [100, 200, 300, 400, 500];
         const board = {};
-        const ids = [];
+        const questions = [];
 
         const topics = await this.findAllManyTopic();
         const randFiveTopic = topics.sort(() => Math.random() - 0.5).slice(0, 5);
@@ -60,12 +61,12 @@ export class TopicService {
 
                 // board[topic.name].push(questFindRandOnPoint);
                 if (questFindRandOnPoint) {
-                    ids.push(questFindRandOnPoint.id);
+                    questions.push(questFindRandOnPoint);
                 }
             }
         }
 
-        return ids;
+        return questions;
     }
 
     findAll() {

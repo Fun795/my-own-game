@@ -5,7 +5,7 @@
   "username": "admin",
   "password": "admin",
   "database": "mog",
-  "synchronize": false,
+  "synchronize": true,
   "logging": false,
   "entities": [
     "src/entity/**/*{.js,.ts}"

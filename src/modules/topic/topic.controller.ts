@@ -16,6 +16,7 @@ export class TopicController {
 
     @Get(":id")
     findOne(@Param("id") id: string) {
+        //TODO: использовать transform, чтобы тип параметра был Number
         return this.topicService.findOne(Number(id));
     }
 

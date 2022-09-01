@@ -16,7 +16,7 @@ export function mapGameToGameFindAllDto(gameArray: Game[]): GameFindAllDto[] {
         status: elem.status,
         step: elem.step,
         updatedDate: elem.updatedDate,
-        total_score: elem.total_score
+        total_score: elem.totalScore
     }));
 }
 
@@ -25,9 +25,9 @@ export function mapGameToGameDto(game: Game): GameDto {
 
     createdGameDto.id = game.id;
     createdGameDto.status = game.status;
-    createdGameDto.questions = game.questions;
+    // createdGameDto.questions = game.questions;
     createdGameDto.step = game.step;
-    createdGameDto.total_score = game.total_score;
+    createdGameDto.totalScore = game.totalScore;
 
     return createdGameDto;
 }
