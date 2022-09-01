@@ -1,13 +1,35 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Question } from "../../question/question.entity";
+import { Topic } from "../../topic/entities/topic.entity";
+import { Game } from "../../game/entities/game.entity";
 
 @Entity()
+@Index(["gameId", "question"], { unique: true })
 export class GameAnswerQuestion {
-    @PrimaryColumn()
-    game_id: number;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-    @PrimaryColumn()
-    question_id: number;
+    @ManyToOne(() => Game, (game) => game.gameAnswerQuestion)
+    @JoinColumn({ name: "game_id" })
+    gameId: number;
 
-    @Column()
-    is_answered: boolean;
+    @ManyToOne(() => Question, (question) => question.gameAnswerQuestion)
+    @JoinColumn({ name: "question_id" })
+    question: Question;
+
+    @Column({
+        name: "question_asked",
+        default: false
+    })
+    questionAsked: boolean;
+
+    @Column({
+        name: "answer_is_correct"
+    })
+    answerIsCorrect: boolean;
+
+    @Column({
+        name: "user_answer"
+    })
+    userAnswer: string;
 }

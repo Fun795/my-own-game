@@ -2,16 +2,21 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsInt, IsString } from "class-validator";
 
+export class sendAnswerRequest {
+    dto: QuestionCheckDto;
+    metadata;
+}
+
 export class QuestionCheckDto {
     @ApiProperty({ type: Number })
     @Type((value) => Number)
     @IsInt()
-    id: number;
+    questionId: number;
 
     @ApiProperty({ type: Number })
     @Type((value) => Number)
     @IsInt()
-    game_id: number;
+    gameId: number;
 
     @ApiProperty()
     @IsString()

@@ -45,6 +45,6 @@ import pino from "pino";
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer): any {
-        consumer.apply(LoggerMiddleware).forRoutes("question");
+        consumer.apply(LoggerMiddleware).forRoutes("question"); // TODO: убрать
     }
 }

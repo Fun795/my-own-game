@@ -25,8 +25,13 @@ export class GameController {
         return mapGameToGameDto(game);
     }
 
-    @Post("sendAnswer/:game_id/:id/:answer") sendAnswer(@Body() parameter: QuestionCheckDto): Promise<boolean> {
-        return this.gameService.sendAnswer(parameter.answer, parameter.id, parameter.game_id);
+    @Post("sendAnswer")
+    sendAnswer(@Body() parameter: QuestionCheckDto): Promise<boolean> {
+        return this.gameService.sendAnswer(parameter);
+    }
+    @Post("test")
+    test() {
+        return this.gameService.test();
     }
 
     @Post("/generateBoard/")
