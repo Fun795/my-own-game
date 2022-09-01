@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import { TopicService } from "./topic.service";
-import { TopicReateDto, TopicUpdateDto, TopicToQuestionDto } from "./dto";
+import { TopicCreateDto, TopicUpdateDto, TopicToQuestionDto } from "./dto";
 import {
     ApiBadRequestResponse,
     ApiCreatedResponse,
@@ -40,7 +40,7 @@ export class TopicController {
         description: "Topic created",
         type: Topic
     })
-    create(@Query() createTopicDto: TopicReateDto) {
+    create(@Query() createTopicDto: TopicCreateDto) {
         return this.topicService.create(createTopicDto);
     }
 

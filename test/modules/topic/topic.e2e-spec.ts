@@ -11,7 +11,7 @@ import { TopicService } from "../../../src/modules/topic/topic.service";
 import { repositoryMock } from "../../mock/repository.mock";
 import { eventsServiceMock } from "../../mock/eventsService.mock";
 import { TopicController } from "../../../src/modules/topic/topic.controller";
-import { TopicReateDto } from "../../../src/modules/topic/dto/topicСreate.dto";
+import { TopicCreateDto } from "../../../src/modules/topic/dto/topicСreate.dto";
 import { TopicUpdateDto } from "../../../src/modules/topic/dto/topicUpdate.dto";
 import { loggerMock } from "../../mock/logger.mock";
 
@@ -72,7 +72,7 @@ describe("Topic", () => {
 
     test("/POST topic/. Should return 201 if order not exist and have been created", () => {
         const topic: Topic = new Topic();
-        const topicSend: TopicReateDto = { name: "asd" };
+        const topicSend: TopicCreateDto = { name: "asd" };
         jest.spyOn(repositoryMock, "findOne").mockResolvedValue(topic);
 
         return (
