@@ -43,8 +43,4 @@ import pino from "pino";
         GameQuestionAnswerModule
     ]
 })
-export class AppModule implements NestModule {
-    configure(consumer: MiddlewareConsumer): any {
-        consumer.apply(LoggerMiddleware).forRoutes("question"); // TODO: убрать
-    }
-}
+export class AppModule {}

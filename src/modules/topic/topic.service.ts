@@ -21,10 +21,13 @@ export class TopicService {
         return await this.topicRepository.save(createTopicDto);
     }
 
-    findAllManyTopic() {
-        return this.topicRepository.find({
-            relations: ["questions"]
-        });
+    async findAllManyTopic(count: number = 5): Promise<Topic[]> {
+        return await this.topicRepository
+            .createQueryBuilder("topic")
+            .select("id")
+            .orderBy("RANDOM()")
+            .limit(count)
+            .execute();
     }
 
     findAll() {

@@ -39,6 +39,40 @@ export class QuestionService {
         return question;
     }
 
+    async findRandQuestionByTopic(topicId: number): Promise<Question[]> {
+        const generator = (topicId, countQuestion: number = 5) => {
+            const pullQuestionPoint = [100, 200, 300, 400, 500];
+
+            let query = `
+                   ( select * from question
+                        where topic_id IN (${topicId}) and "point" = ${pullQuestionPoint[0]}
+                        order by random()
+                        limit 1
+                        )
+            `;
+
+            pullQuestionPoint.forEach((point) => {
+                query += `union
+                 (
+                    select * from question
+                    where topic_id IN (${topicId}) and "point" = ${point}
+                    order by random()
+                    limit 1 
+                )`;
+            });
+
+            return query;
+        };
+
+        const question = await this.questionRepository.query(generator(topicId, 5));
+
+        if (!question) {
+            throw new NotFoundException("question not found by id");
+        }
+
+        return question;
+    }
+
     async update(question: QuestionUpdateDto): Promise<Question> {
         const questionToUpdate = await this.findOne(question.id);
 

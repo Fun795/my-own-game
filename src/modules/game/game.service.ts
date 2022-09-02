@@ -83,26 +83,13 @@ export class GameService {
     }
 
     async generateBoard(): Promise<Question[]> {
-        const pullQuestionPoint = [100, 200, 300, 400, 500];
         const questions = [];
 
-        const topics = await this.topicService.findAllManyTopic();
-        const randFiveTopic = topics.sort(() => Math.random() - 0.5).slice(0, 5);
+        const randFiveTopic = await this.topicService.findAllManyTopic(5);
 
-        for (const topic of randFiveTopic) {
-            questionService.getBy();
-            const randQuestion = topic.questions.sort(() => Math.random() - 0.5);
-
-            // board[topic.name] = [];
-
-            for (const point of pullQuestionPoint) {
-                const questFindRandOnPoint = randQuestion.find((question) => question.point === point);
-
-                // board[topic.name].push(questFindRandOnPoint);
-                if (questFindRandOnPoint) {
-                    questions.push(questFindRandOnPoint);
-                }
-            }
+        for (const { id } of randFiveTopic) {
+            const QR: Question[] = await this.questionService.findRandQuestionByTopic(id);
+            questions.push(...QR);
         }
 
         return questions;
