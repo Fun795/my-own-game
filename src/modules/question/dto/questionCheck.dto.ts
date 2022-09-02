@@ -11,7 +11,7 @@ export class QuestionCheckDto {
     @ApiProperty({ type: Number })
     @Type((value) => Number)
     @IsInt()
-    questionId: number;
+    questionAnswerId: number;
 
     @ApiProperty({ type: Number })
     @Type((value) => Number)

@@ -8,7 +8,7 @@ export class joinQuestion1662015349357 implements MigrationInterface {
             `CREATE TABLE "game" ("id" SERIAL NOT NULL, "step" integer NOT NULL DEFAULT '0', "updatedDate" TIMESTAMP NOT NULL DEFAULT now(), "status" character varying NOT NULL DEFAULT 'process', "total_score" integer NOT NULL DEFAULT '0', CONSTRAINT "PK_352a30652cd352f552fef73dec5" PRIMARY KEY ("id"))`
         );
         await queryRunner.query(
-            `CREATE TABLE "game_answer_question" ("id" SERIAL NOT NULL, "question_asked" boolean NOT NULL DEFAULT false, "answer_is_correct" boolean NOT NULL, "user_answer" character varying NOT NULL, "game_id" integer, "question_id" integer, CONSTRAINT "PK_e758846591125cecd9fe5ee26de" PRIMARY KEY ("id"))`
+            `CREATE TABLE "game_answer_question" ("id" SERIAL NOT NULL, "question_asked" boolean NOT NULL DEFAULT false, "answer_is_correct" boolean NOT NULL DEFAULT false, "user_answer" character varying, "game_id" integer, "question_id" integer, CONSTRAINT "PK_e758846591125cecd9fe5ee26de" PRIMARY KEY ("id"))`
         );
         await queryRunner.query(
             `CREATE UNIQUE INDEX "IDX_0235457c5b84a5100e6890766f" ON "game_answer_question" ("game_id", "question_id") `

@@ -2,6 +2,8 @@ import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, OneToMany, Jo
 import { GameStatus } from "../enums/statusGameEnum";
 import { GameAnswerQuestion } from "../../gameQuestionsAnswer/entities/gameAnswerQuestion.entity";
 import { Question } from "../../question/question.entity";
+import { QuestionCheckDto } from "../../question/dto";
+import { ResultAnswerDto } from "../../gameQuestionsAnswer/dto/addGameAnswerQuestion.dto";
 
 @Entity()
 export class Game {
@@ -30,30 +32,12 @@ export class Game {
     })
     totalScore: number;
 
-    fillQuestions(questions: GameAnswerQuestion[]): void {
-        // this.questions = [...questions];
-    }
-
-    giveAnswer(questionId: number, userAnswer: string): boolean {
-        // TODO Как обновить questionAnswer правильно?
-        const question: GameAnswerQuestion = this.gameAnswerQuestion.find(
-            (gameAnswerQuestion) => gameAnswerQuestion.question.id === questionId
-        );
-        question.questionAsked = true;
-
-        const isCorrect = question.question.answer === userAnswer;
-        question.answerIsCorrect = isCorrect;
-
-        if (isCorrect) {
-            this.totalScore += question.question.point;
-        }
-
-        question.userAnswer = userAnswer;
-
+    updateAfterAnswer({ isCorrect, question }: ResultAnswerDto): void {
+        this.totalScore += isCorrect ? question.point : 0;
         this.step++;
+
         if (this.step >= 25) {
             this.status = GameStatus.Finished;
         }
-        return isCorrect;
     }
 }

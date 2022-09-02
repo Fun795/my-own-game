@@ -1,21 +1,21 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsInt, IsBoolean } from "class-validator";
+import { Question } from "../../question/question.entity";
 
 export class CreateGameAnswerQuestionDto {
     @ApiProperty({ type: Number })
     @IsInt()
-    game_id: number;
+    gameId: number;
 
-    @ApiProperty({ type: Number })
-    @IsInt()
-    question_id: number;
-
-    @ApiProperty({ type: Boolean })
-    @IsBoolean()
-    is_answered: boolean;
+    @ApiProperty({ type: Question })
+    question: Question;
 }
 export class GetGameAnswerQuestionsDto {
     @ApiProperty({ type: Number })
     @IsInt()
-    game_id: number;
+    gameId: number;
+}
+export class ResultAnswerDto {
+    isCorrect: boolean;
+    question: Question;
 }

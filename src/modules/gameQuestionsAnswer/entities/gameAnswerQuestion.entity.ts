@@ -24,12 +24,14 @@ export class GameAnswerQuestion {
     questionAsked: boolean;
 
     @Column({
-        name: "answer_is_correct"
+        name: "answer_is_correct",
+        default: false
     })
     answerIsCorrect: boolean;
 
     @Column({
-        name: "user_answer"
+        name: "user_answer",
+        nullable: true
     })
     userAnswer: string;
 }

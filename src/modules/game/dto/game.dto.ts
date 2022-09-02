@@ -1,12 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Question } from "../../question/question.entity";
+import { GameAnswerQuestion } from "../../gameQuestionsAnswer/entities/gameAnswerQuestion.entity";
 
 export class GameDto {
     @ApiProperty()
     id: number;
 
     @ApiProperty()
-    questions: Question[];
+    questions: GameAnswerQuestion[];
 
     @ApiProperty()
     step: number;

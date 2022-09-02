@@ -11,8 +11,14 @@ import { QuestionService } from "../question/question.service";
 import { NotAcceptableException } from "@nestjs/common/exceptions/not-acceptable.exception";
 import { GameStatus } from "./enums/statusGameEnum";
 import { GameDto, GameFindAllDto } from "./dto";
-import { mapGameToGameDto, mapGameToGameCreateDto, mapGameToGameFindAllDto } from "./mapper/game.mapper";
+import {
+    mapGameToGameDto,
+    mapGameToGameFindAllDto,
+    mapGameToGameCreateDto,
+    mapQuestionToAnswerQuestionDto
+} from "./mapper/game.mapper";
 import { QuestionCheckDto } from "../question/dto";
+import { CreateGameAnswerQuestionDto } from "../gameQuestionsAnswer/dto/addGameAnswerQuestion.dto";
 
 @Injectable()
 export class GameService {
@@ -28,10 +34,11 @@ export class GameService {
 
     async create(): Promise<GameDto> {
         const game = this.gameRepository.create();
-        const questions = await this.generateBoard();
-
-        // game.fillQuestions(questions);
         const createdGame = await this.gameRepository.save(game);
+
+        const questions = await this.generateBoard();
+        const answerQuestion: CreateGameAnswerQuestionDto[] = mapQuestionToAnswerQuestionDto(questions, game.id);
+        await this.gameQuestionAnswerService.create(answerQuestion);
 
         const createdGameDto: GameDto = mapGameToGameCreateDto(createdGame);
 
@@ -46,7 +53,12 @@ export class GameService {
     }
 
     async findOne(id: number): Promise<Game> {
-        const game = await this.gameRepository.findOne({ id });
+        const game = await this.gameRepository.findOne(
+            { id },
+            {
+                relations: ["gameAnswerQuestion"]
+            }
+        );
 
         if (!game) {
             throw new NotFoundException(`game not found by id ${id}`);
@@ -57,16 +69,19 @@ export class GameService {
 
     async sendAnswer(questionCheckDto: QuestionCheckDto): Promise<boolean> {
         const game: Game = await this.findOne(questionCheckDto.gameId);
-        const resultAnswer = game.giveAnswer(questionCheckDto.questionId, questionCheckDto.answer);
+
+        const answer = await this.gameQuestionAnswerService.giveAnswer(questionCheckDto);
+
+        game.updateAfterAnswer(answer);
+
         await this.gameRepository.save(game);
 
-        return resultAnswer;
+        return answer.isCorrect;
     }
 
-    async generateBoard(): Promise<number[]> {
+    async generateBoard(): Promise<Question[]> {
         const pullQuestionPoint = [100, 200, 300, 400, 500];
-        const board = {};
-        const ids = [];
+        const questions = [];
 
         const topics = await this.topicService.findAllManyTopic();
         const randFiveTopic = topics.sort(() => Math.random() - 0.5).slice(0, 5);
@@ -81,12 +96,12 @@ export class GameService {
 
                 // board[topic.name].push(questFindRandOnPoint);
                 if (questFindRandOnPoint) {
-                    ids.push(questFindRandOnPoint.id);
+                    questions.push(questFindRandOnPoint);
                 }
             }
         }
 
-        return ids;
+        return questions;
     }
 
     async test() {
