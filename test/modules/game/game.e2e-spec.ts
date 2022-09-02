@@ -76,7 +76,7 @@ describe("Game", () => {
     });
 
     test("/POST generateBoard/. Should return 201", () => {
-        const mockResult = [1, 2, 3];
+        const mockResult = [new Question()];
         jest.spyOn(gameServiceMock, "generateBoard").mockResolvedValue(mockResult);
 
         return request(app.getHttpServer())
