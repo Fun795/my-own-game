@@ -69,14 +69,26 @@ export class GameService {
 
         return game;
     }
+    validateAnswer(questionCheckDto: QuestionCheckDto, game: Game): void {
+        if (game.status === GameStatus.Finished) {
+            throw new NotAcceptableException("The game you want to answer is already finish");
+        }
+        const gameAnswerQuestion = game.gameAnswerQuestion.find((x) => x.id === questionCheckDto.questionAnswerId);
 
+        if (!gameAnswerQuestion) {
+            throw new NotAcceptableException("Question is not included in this game");
+        }
+        const alreadyAnswered = gameAnswerQuestion.questionAsked;
+
+        if (alreadyAnswered) {
+            throw new NotAcceptableException("This question has already been answered");
+        }
+    }
     async sendAnswer(questionCheckDto: QuestionCheckDto): Promise<boolean> {
         const game: Game = await this.findOne(questionCheckDto.gameId);
-
-        // TODO: сделать отдельную валидацию на проверку соответствие id игры и вопроса
+        this.validateAnswer(questionCheckDto, game);
 
         const result = game.checkAnswer(questionCheckDto.questionAnswerId, questionCheckDto.answer);
-        //TODO: добавить проверку на уже отвеченный вопрос
         await this.gameRepository.save(game, {});
 
         return result.isCorrect;
@@ -90,7 +102,6 @@ export class GameService {
         const randFiveTopic = topics.sort(() => Math.random() - 0.5).slice(0, 5);
 
         for (const topic of randFiveTopic) {
-            questionService.getBy();
             const randQuestion = topic.questions.sort(() => Math.random() - 0.5);
 
             // board[topic.name] = [];

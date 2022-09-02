@@ -4,6 +4,7 @@ import { GameAnswerQuestion } from "../../gameQuestionsAnswer/entities/gameAnswe
 import { Question } from "../../question/question.entity";
 import { QuestionCheckDto } from "../../question/dto";
 import { ResultAnswerDto } from "../../gameQuestionsAnswer/dto/addGameAnswerQuestion.dto";
+import { NotAcceptableException } from "@nestjs/common/exceptions/not-acceptable.exception";
 
 @Entity()
 export class Game {
@@ -36,6 +37,7 @@ export class Game {
 
     checkAnswer(questionAnswerId: number, answer: string): any {
         const gameAnswerQuestion = this.gameAnswerQuestion.find((x) => x.id === questionAnswerId);
+
         const isCorrect = gameAnswerQuestion.checkAnswer(answer);
 
         this.totalScore += isCorrect ? gameAnswerQuestion.question.point : 0;

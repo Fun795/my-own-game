@@ -2,6 +2,8 @@ import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGen
 import { Question } from "../../question/question.entity";
 import { Topic } from "../../topic/entities/topic.entity";
 import { Game } from "../../game/entities/game.entity";
+import { NotFoundException } from "@nestjs/common";
+import { NotAcceptableException } from "@nestjs/common/exceptions/not-acceptable.exception";
 
 @Entity()
 @Index(["gameId", "question"], { unique: true })
