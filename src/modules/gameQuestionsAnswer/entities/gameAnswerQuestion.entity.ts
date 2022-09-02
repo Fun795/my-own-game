@@ -13,7 +13,7 @@ export class GameAnswerQuestion {
     @JoinColumn({ name: "game_id" })
     gameId: number;
 
-    @ManyToOne(() => Question, (question) => question.gameAnswerQuestion)
+    @ManyToOne(() => Question, (question) => question.gameAnswerQuestion, { eager: true })
     @JoinColumn({ name: "question_id" })
     question: Question;
 
@@ -34,4 +34,12 @@ export class GameAnswerQuestion {
         nullable: true
     })
     userAnswer: string;
+
+    checkAnswer(answer: string): boolean {
+        const isCorrect = this.question.answer === answer;
+        this.questionAsked = true;
+        this.answerIsCorrect = isCorrect;
+        this.userAnswer = answer;
+        return isCorrect;
+    }
 }

@@ -10,7 +10,9 @@ export class Game {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @OneToMany(() => GameAnswerQuestion, (gameAnswerQuestion) => gameAnswerQuestion.gameId)
+    @OneToMany(() => GameAnswerQuestion, (gameAnswerQuestion) => gameAnswerQuestion.gameId, {
+        cascade: ["insert", "update"]
+    })
     gameAnswerQuestion: GameAnswerQuestion[];
 
     @Column({
@@ -32,12 +34,20 @@ export class Game {
     })
     totalScore: number;
 
-    updateAfterAnswer({ isCorrect, question }: ResultAnswerDto): void {
-        this.totalScore += isCorrect ? question.point : 0;
+    checkAnswer(questionAnswerId: number, answer: string): any {
+        const gameAnswerQuestion = this.gameAnswerQuestion.find((x) => x.id === questionAnswerId);
+        const isCorrect = gameAnswerQuestion.checkAnswer(answer);
+
+        this.totalScore += isCorrect ? gameAnswerQuestion.question.point : 0;
         this.step++;
 
         if (this.step >= 25) {
             this.status = GameStatus.Finished;
         }
+
+        return {
+            isCorrect,
+            rightAnswer: gameAnswerQuestion.question.answer
+        };
     }
 }

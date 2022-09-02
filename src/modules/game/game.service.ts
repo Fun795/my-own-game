@@ -34,9 +34,12 @@ export class GameService {
 
     async create(): Promise<CreateGameDto> {
         const game = this.gameRepository.create();
-        const createdGame = await this.gameRepository.save(game);
+        // const createdGame = await this.gameRepository.save(game);
 
         const questions = await this.generateBoard();
+        // game.setQuestionMatrix(questions);
+        const createdGame = await this.gameRepository.save(game);
+
         const answerQuestion: CreateGameAnswerQuestionDto[] = mapQuestionToAnswerQuestionDto(questions, game.id);
         await this.gameQuestionAnswerService.create(answerQuestion);
 
@@ -70,13 +73,13 @@ export class GameService {
     async sendAnswer(questionCheckDto: QuestionCheckDto): Promise<boolean> {
         const game: Game = await this.findOne(questionCheckDto.gameId);
 
-        const answer = await this.gameQuestionAnswerService.giveAnswer(questionCheckDto);
+        // TODO: сделать отдельную валидацию на проверку соответствие id игры и вопроса
 
-        game.updateAfterAnswer(answer);
+        const result = game.checkAnswer(questionCheckDto.questionAnswerId, questionCheckDto.answer);
+        //TODO: добавить проверку на уже отвеченный вопрос
+        await this.gameRepository.save(game, {});
 
-        await this.gameRepository.save(game);
-
-        return answer.isCorrect;
+        return result.isCorrect;
     }
 
     async generateBoard(): Promise<Question[]> {
@@ -87,6 +90,7 @@ export class GameService {
         const randFiveTopic = topics.sort(() => Math.random() - 0.5).slice(0, 5);
 
         for (const topic of randFiveTopic) {
+            questionService.getBy();
             const randQuestion = topic.questions.sort(() => Math.random() - 0.5);
 
             // board[topic.name] = [];
