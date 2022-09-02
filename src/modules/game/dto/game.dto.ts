@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { GameAnswerQuestion } from "../../gameQuestionsAnswer/entities/gameAnswerQuestion.entity";
+import { GameStatus } from "../enums/statusGameEnum";
 
 export class GameDto {
     @ApiProperty()
@@ -12,7 +13,7 @@ export class GameDto {
     step: number;
 
     @ApiProperty()
-    status: string;
+    status: GameStatus;
 
     @ApiProperty()
     totalScore: number;

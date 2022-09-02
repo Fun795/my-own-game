@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { GameService } from "./game.service";
-import { GameDto, GameFindAllDto } from "./dto";
+import { CreateGameDto, GameDto, GameFindAllDto } from "./dto";
 import { ApiTags } from "@nestjs/swagger";
 import { QuestionCheckDto } from "../question/dto";
 import { mapGameToGameDto } from "./mapper/game.mapper";
@@ -11,7 +11,7 @@ export class GameController {
     constructor(private readonly gameService: GameService) {}
 
     @Post()
-    create(): Promise<GameDto> {
+    create(): Promise<CreateGameDto> {
         return this.gameService.create();
     }
 

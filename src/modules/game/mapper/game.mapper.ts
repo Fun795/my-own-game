@@ -1,9 +1,9 @@
 import { Game } from "../entities/game.entity";
-import { GameDto, GameFindAllDto } from "../dto";
+import { CreateGameDto, GameDto, GameFindAllDto } from "../dto";
 import { Question } from "../../question/question.entity";
 import { CreateGameAnswerQuestionDto } from "../../gameQuestionsAnswer/dto/addGameAnswerQuestion.dto";
 
-export function mapGameToGameCreateDto(game: Game): GameDto {
+export function mapGameToGameCreateDto(game: Game): CreateGameDto {
     const createdGameDto: GameDto = new GameDto();
 
     createdGameDto.id = game.id;

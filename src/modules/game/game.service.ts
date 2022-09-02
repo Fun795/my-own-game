@@ -10,7 +10,7 @@ import { GameAnswerQuestion } from "../gameQuestionsAnswer/entities/gameAnswerQu
 import { QuestionService } from "../question/question.service";
 import { NotAcceptableException } from "@nestjs/common/exceptions/not-acceptable.exception";
 import { GameStatus } from "./enums/statusGameEnum";
-import { GameDto, GameFindAllDto } from "./dto";
+import { CreateGameDto, GameDto, GameFindAllDto } from "./dto";
 import {
     mapGameToGameDto,
     mapGameToGameFindAllDto,
@@ -32,7 +32,7 @@ export class GameService {
         private readonly logger: PinoLogger
     ) {}
 
-    async create(): Promise<GameDto> {
+    async create(): Promise<CreateGameDto> {
         const game = this.gameRepository.create();
         const createdGame = await this.gameRepository.save(game);
 
@@ -40,7 +40,7 @@ export class GameService {
         const answerQuestion: CreateGameAnswerQuestionDto[] = mapQuestionToAnswerQuestionDto(questions, game.id);
         await this.gameQuestionAnswerService.create(answerQuestion);
 
-        const createdGameDto: GameDto = mapGameToGameCreateDto(createdGame);
+        const createdGameDto: CreateGameDto = mapGameToGameCreateDto(createdGame);
 
         return createdGameDto;
     }
