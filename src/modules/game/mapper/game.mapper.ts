@@ -1,7 +1,7 @@
 import { Game } from "../entities/game.entity";
 import { CreateGameDto, GameDto, GameFindAllDto } from "../dto";
 import { Question } from "../../question/question.entity";
-import { CreateGameAnswerQuestionDto } from "../../gameQuestionsAnswer/dto/addGameAnswerQuestion.dto";
+import { GameAnswerQuestion } from "../../gameQuestionsAnswer/entities/gameAnswerQuestion.entity";
 
 export function mapGameToGameCreateDto(game: Game): CreateGameDto {
     const createdGameDto: GameDto = new GameDto();
@@ -33,12 +33,11 @@ export function mapGameToGameDto(game: Game): GameDto {
 
     return createdGameDto;
 }
-export function mapQuestionToAnswerQuestionDto(questions: Question[], gameId: number): CreateGameAnswerQuestionDto[] {
-    const AnswerQuestions: CreateGameAnswerQuestionDto[] = questions.map((question): CreateGameAnswerQuestionDto => {
-        return {
-            gameId: gameId,
-            question: question
-        };
+export function mapQuestionToAnswerQuestionDto(questions: Question[], gameId: number): GameAnswerQuestion[] {
+    return questions.map((question) => {
+        const gameAnswerQuestion = new GameAnswerQuestion();
+        gameAnswerQuestion.gameId = gameId;
+        gameAnswerQuestion.question = question;
+        return gameAnswerQuestion;
     });
-    return AnswerQuestions;
 }

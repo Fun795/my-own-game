@@ -12,7 +12,8 @@ export class Game {
     id: number;
 
     @OneToMany(() => GameAnswerQuestion, (gameAnswerQuestion) => gameAnswerQuestion.gameId, {
-        cascade: ["insert", "update"]
+        cascade: ["insert", "update"],
+        eager: true
     })
     gameAnswerQuestion: GameAnswerQuestion[];
 

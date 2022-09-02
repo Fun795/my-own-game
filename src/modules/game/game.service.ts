@@ -6,19 +6,12 @@ import { Game } from "./entities/game.entity";
 import { Question } from "../question/question.entity";
 import { TopicService } from "../topic/topic.service";
 import { GameQuestionAnswerService } from "../gameQuestionsAnswer/game-question-answer.service";
-import { GameAnswerQuestion } from "../gameQuestionsAnswer/entities/gameAnswerQuestion.entity";
 import { QuestionService } from "../question/question.service";
 import { NotAcceptableException } from "@nestjs/common/exceptions/not-acceptable.exception";
 import { GameStatus } from "./enums/statusGameEnum";
-import { CreateGameDto, GameDto, GameFindAllDto } from "./dto";
-import {
-    mapGameToGameDto,
-    mapGameToGameFindAllDto,
-    mapGameToGameCreateDto,
-    mapQuestionToAnswerQuestionDto
-} from "./mapper/game.mapper";
+import { CreateGameDto, GameFindAllDto } from "./dto";
+import { mapGameToGameCreateDto, mapGameToGameFindAllDto, mapQuestionToAnswerQuestionDto } from "./mapper/game.mapper";
 import { QuestionCheckDto } from "../question/dto";
-import { CreateGameAnswerQuestionDto } from "../gameQuestionsAnswer/dto/addGameAnswerQuestion.dto";
 
 @Injectable()
 export class GameService {
@@ -34,18 +27,11 @@ export class GameService {
 
     async create(): Promise<CreateGameDto> {
         const game = this.gameRepository.create();
-        // const createdGame = await this.gameRepository.save(game);
-
         const questions = await this.generateBoard();
-        // game.setQuestionMatrix(questions);
-        const createdGame = await this.gameRepository.save(game);
 
-        const answerQuestion: CreateGameAnswerQuestionDto[] = mapQuestionToAnswerQuestionDto(questions, game.id);
-        await this.gameQuestionAnswerService.create(answerQuestion);
+        game.gameAnswerQuestion = mapQuestionToAnswerQuestionDto(questions, game.id);
 
-        const createdGameDto: CreateGameDto = mapGameToGameCreateDto(createdGame);
-
-        return createdGameDto;
+        return await this.gameRepository.save(game);
     }
 
     async findAll(): Promise<GameFindAllDto[]> {
