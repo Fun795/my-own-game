@@ -13,29 +13,24 @@ import { repositoryMock } from "../../mock/repository.mock";
 import { eventsServiceMock } from "../../mock/eventsService.mock";
 
 describe("QuestionController", () => {
-    //     let questionController: QuestionController;
-    //     let questionService: QuestionService;
+    let questionController: QuestionController;
+    let questionService: QuestionService;
 
-    // beforeEach(async () => {
-    //     const moduleRef = await Test.createTestingModule({
-    //         controllers: [QuestionController],
-    //         providers: [QuestionService]
-    //     }).compile();
-    //
-    //     questionService = moduleRef.get<QuestionService>(QuestionService);
-    // });
+    beforeEach(async () => {
+        const moduleRef = await Test.createTestingModule({
+            controllers: [QuestionController],
+            providers: [QuestionService]
+        }).compile();
 
-    // describe("findAll", () => {
-    //     test("should return an array of cats", async () => {
-    //         const result = ["test"];
-    //         jest.spyOn(questionService, "findAll").mockImplementation(() => result);
-    //
-    //         expect(await questionController.getAll()).toBe(result);
-    //     });
-    // });
+        questionService = moduleRef.get<QuestionService>(QuestionService);
+    });
+
     describe("findAll", () => {
-        test("should return an array of cats", () => {
-            expect(1).toBe(1);
+        test("should return an array of cats", async () => {
+            const result = ["test"];
+            jest.spyOn(questionService, "findAll").mockImplementation(() => result);
+
+            expect(await questionController.getAll()).toBe(result);
         });
     });
 });

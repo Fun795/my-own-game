@@ -29,6 +29,10 @@ export class GameController {
     sendAnswer(@Body() parameter: QuestionCheckDto): Promise<boolean> {
         return this.gameService.sendAnswer(parameter);
     }
+    @Post("test")
+    test() {
+        return this.gameService.test();
+    }
 
     @Post("/generateBoard/")
     async generateBoard(): Promise<any> {

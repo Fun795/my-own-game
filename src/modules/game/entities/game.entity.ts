@@ -37,7 +37,7 @@ export class Game {
     totalScore: number;
 
     checkAnswer(questionAnswerId: number, answer: string): any {
-        const gameAnswerQuestion: GameAnswerQuestion = this.gameAnswerQuestion.find((x) => x.id === questionAnswerId);
+        const gameAnswerQuestion = this.gameAnswerQuestion.find((x) => x.id === questionAnswerId);
 
         const isCorrect = gameAnswerQuestion.checkAnswer(answer);
 
