@@ -1,24 +1,22 @@
-import * as request from "supertest";
 import { Test } from "@nestjs/testing";
 import { GameService } from "../../../src/modules/game/game.service";
 import { GameController } from "../../../src/modules/game/game.controller";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
-//import { mockGameModel as fakeGameModel } from "./mock/GameModelMock";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { getLoggerToken, PinoLogger } from "nestjs-pino";
-// import { EventsService } from "../../../src/modules/events/events.service";
+import { getLoggerToken } from "nestjs-pino";
 import { Game } from "../../../src/modules/game/entities/game.entity";
 import { repositoryMock } from "../../mock/repository.mock";
-import { Topic } from "../../../src/modules/topic/entities/topic.entity";
 import { TopicService } from "../../../src/modules/topic/topic.service";
 import { Question } from "../../../src/modules/question/question.entity";
 import { GameQuestionAnswerService } from "../../../src/modules/gameQuestionsAnswer/game-question-answer.service";
 import { QuestionService } from "../../../src/modules/question/question.service";
 import { loggerMock } from "../../mock/logger.mock";
-import { EventsService } from "../../../src/modules/events/events.service";
-import { eventsServiceMock } from "../../mock/eventsService.mock";
-// import { eventsServiceMock } from "../../mock/eventsService.mock";
 import { GameAnswerQuestion } from "../../../src/modules/gameQuestionsAnswer/entities/gameAnswerQuestion.entity";
+import { GameStatus } from "../../../src/modules/game/enums/statusGameEnum";
+import { gameEntityFromEsb } from "./fixtures/gameEntityFromEsb";
+import { gameEntityResultCorrectAnswer, gameEntityResultNotCorrectAnswer } from "./fixtures/gameEntityResultAnswer";
+import * as _ from "lodash";
+import { QuestionCheckDto } from "../../../src/modules/question/dto";
 
 let gameService: GameService;
 
@@ -73,21 +71,74 @@ describe("Game", () => {
         await app.init();
         gameService = moduleRef.get<GameService>(GameService);
     });
-    test("game create", () => {
-        const game = gameServiceMock.create();
-        expect(game).toBe(2);
+
+    test("updated game if answer is correct", () => {
+        const game = _.cloneDeep(gameEntityFromEsb);
+        const result = gameEntityResultCorrectAnswer;
+        game.checkAnswer(1, "успех");
+        expect(game).toEqual(result);
     });
 
-    // test("/POST generateBoard/. Should return 201", () => {
-    //     const mockResult = [new Question()];
-    //     jest.spyOn(gameServiceMock, "generateBoard").mockResolvedValue(mockResult);
-    //
-    //     return request(app.getHttpServer())
-    //         .post(`/game/generateBoard`)
-    //         .send()
-    //         .expect((res) => {
-    //             expect(res.body).toEqual(mockResult);
-    //         })
-    //         .expect(201);
-    // });
+    test("updated game if answer is not correct", () => {
+        const game = _.cloneDeep(gameEntityFromEsb);
+        const result = gameEntityResultNotCorrectAnswer;
+        game.checkAnswer(1, "не успех");
+        expect(game).toEqual(result);
+    });
+
+    test("if step game equals 25, game must be finish", () => {
+        const game = _.cloneDeep(gameEntityFromEsb);
+        game.step = 24;
+        game.checkAnswer(1, "финиш");
+        expect(game.status).toBe(GameStatus.Finished);
+    });
+
+    test("If The game you want to answer is already finish", async () => {
+        const gameMock: Game = _.cloneDeep(gameEntityFromEsb);
+        gameMock.status = GameStatus.Finished;
+        jest.spyOn(gameServiceMock, "findOne").mockResolvedValue(gameMock);
+
+        const questionCheckDto: QuestionCheckDto = {
+            gameId: 1,
+            questionAnswerId: 1,
+            answer: "успех"
+        };
+
+        await expect(gameServiceMock.sendAnswer(questionCheckDto)).rejects.toThrow(
+            "The game you want to answer is already finish"
+        );
+    });
+
+    test("If Question is not included in game", async () => {
+        const gameMock: Game = _.cloneDeep(gameEntityFromEsb);
+        jest.spyOn(gameServiceMock, "findOne").mockResolvedValue(gameMock);
+
+        const questionCheckDto: QuestionCheckDto = {
+            gameId: 1,
+            questionAnswerId: 3,
+            answer: "успех"
+        };
+
+        await expect(gameServiceMock.sendAnswer(questionCheckDto)).rejects.toThrow(
+            "Question is not included in this game"
+        );
+    });
+
+    test("If this question has already been answered", async () => {
+        const gameMock: Game = _.cloneDeep(gameEntityFromEsb);
+
+        gameMock.gameAnswerQuestion[0].questionAsked = true;
+
+        jest.spyOn(gameServiceMock, "findOne").mockResolvedValue(gameMock);
+
+        const questionCheckDto: QuestionCheckDto = {
+            gameId: 1,
+            questionAnswerId: 1,
+            answer: "успех"
+        };
+
+        await expect(gameServiceMock.sendAnswer(questionCheckDto)).rejects.toThrow(
+            "This question has already been answered"
+        );
+    });
 });
