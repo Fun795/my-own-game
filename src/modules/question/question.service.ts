@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
@@ -42,6 +42,10 @@ export class QuestionService {
     async findRandQuestionByTopic(topicId: number): Promise<Question[]> {
         const generator = (topicId, countQuestion: number = 5) => {
             const pullQuestionPoint = [100, 200, 300, 400, 500];
+
+            if (!Number.isInteger(topicId)) {
+                throw new InternalServerErrorException("topicId not number");
+            }
 
             let query = `
                    ( select * from question

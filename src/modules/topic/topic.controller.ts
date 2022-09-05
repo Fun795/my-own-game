@@ -66,6 +66,6 @@ export class TopicController {
     @Post("findAllManyTopic")
     @ApiOkResponse()
     findAllManyTopic(): Promise<Topic[]> {
-        return this.topicService.findAllManyTopic();
+        return this.topicService.findRandTopics();
     }
 }

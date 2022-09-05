@@ -21,7 +21,7 @@ export class TopicService {
         return await this.topicRepository.save(createTopicDto);
     }
 
-    async findAllManyTopic(count: number = 5): Promise<Topic[]> {
+    async findRandTopics(count: number = 5): Promise<Topic[]> {
         return await this.topicRepository
             .createQueryBuilder("topic")
             .select("id")

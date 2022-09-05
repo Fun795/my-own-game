@@ -83,7 +83,7 @@ export class GameService {
     async generateBoard(): Promise<Question[]> {
         const questions = [];
 
-        const randFiveTopic = await this.topicService.findAllManyTopic(5);
+        const randFiveTopic = await this.topicService.findRandTopics(5);
 
         for (const { id } of randFiveTopic) {
             const QR: Question[] = await this.questionService.findRandQuestionByTopic(id);
