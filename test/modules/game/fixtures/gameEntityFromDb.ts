@@ -6,7 +6,7 @@ import { GameStatus } from "../../../../src/modules/game/enums/statusGameEnum";
 
 const topic = new Topic();
 topic.id = 1;
-const gameEntityFromEsb = new Game();
+const gameEntityFromDb = new Game();
 const question = new Question();
 const gameAnswerQuestion = new GameAnswerQuestion();
 
@@ -24,11 +24,11 @@ question.answer = "успех";
 question.gameAnswerQuestion = [gameAnswerQuestion];
 question.topic = topic;
 
-gameEntityFromEsb.id = 1;
-gameEntityFromEsb.step = 0;
-gameEntityFromEsb.updatedDate = new Date();
-gameEntityFromEsb.status = GameStatus.Process;
-gameEntityFromEsb.totalScore = 0;
-gameEntityFromEsb.gameAnswerQuestion = [gameAnswerQuestion];
+gameEntityFromDb.id = 1;
+gameEntityFromDb.step = 0;
+gameEntityFromDb.updatedDate = new Date();
+gameEntityFromDb.status = GameStatus.Process;
+gameEntityFromDb.totalScore = 0;
+gameEntityFromDb.gameAnswerQuestion = [gameAnswerQuestion];
 
-export { gameEntityFromEsb };
+export { gameEntityFromDb };

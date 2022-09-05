@@ -13,7 +13,7 @@ import { QuestionService } from "../../../src/modules/question/question.service"
 import { loggerMock } from "../../mock/logger.mock";
 import { GameAnswerQuestion } from "../../../src/modules/gameQuestionsAnswer/entities/gameAnswerQuestion.entity";
 import { GameStatus } from "../../../src/modules/game/enums/statusGameEnum";
-import { gameEntityFromEsb } from "./fixtures/gameEntityFromEsb";
+import { gameEntityFromDb } from "./fixtures/gameEntityFromDb";
 import { gameEntityResultCorrectAnswer, gameEntityResultNotCorrectAnswer } from "./fixtures/gameEntityResultAnswer";
 import * as _ from "lodash";
 import { QuestionCheckDto } from "../../../src/modules/question/dto";
@@ -73,28 +73,28 @@ describe("Game", () => {
     });
 
     test("updated game if answer is correct", () => {
-        const game = _.cloneDeep(gameEntityFromEsb);
+        const game = _.cloneDeep(gameEntityFromDb);
         const result = gameEntityResultCorrectAnswer;
         game.checkAnswer(1, "успех");
         expect(game).toEqual(result);
     });
 
     test("updated game if answer is not correct", () => {
-        const game = _.cloneDeep(gameEntityFromEsb);
+        const game = _.cloneDeep(gameEntityFromDb);
         const result = gameEntityResultNotCorrectAnswer;
         game.checkAnswer(1, "не успех");
         expect(game).toEqual(result);
     });
 
     test("if step game equals 25, game must be finish", () => {
-        const game = _.cloneDeep(gameEntityFromEsb);
+        const game = _.cloneDeep(gameEntityFromDb);
         game.step = 24;
         game.checkAnswer(1, "финиш");
         expect(game.status).toBe(GameStatus.Finished);
     });
 
     test("If The game you want to answer is already finish", async () => {
-        const gameMock: Game = _.cloneDeep(gameEntityFromEsb);
+        const gameMock: Game = _.cloneDeep(gameEntityFromDb);
         gameMock.status = GameStatus.Finished;
         jest.spyOn(gameServiceMock, "findOne").mockResolvedValue(gameMock);
 
@@ -110,7 +110,7 @@ describe("Game", () => {
     });
 
     test("If Question is not included in game", async () => {
-        const gameMock: Game = _.cloneDeep(gameEntityFromEsb);
+        const gameMock: Game = _.cloneDeep(gameEntityFromDb);
         jest.spyOn(gameServiceMock, "findOne").mockResolvedValue(gameMock);
 
         const questionCheckDto: QuestionCheckDto = {
@@ -125,7 +125,7 @@ describe("Game", () => {
     });
 
     test("If this question has already been answered", async () => {
-        const gameMock: Game = _.cloneDeep(gameEntityFromEsb);
+        const gameMock: Game = _.cloneDeep(gameEntityFromDb);
 
         gameMock.gameAnswerQuestion[0].questionAsked = true;
 
