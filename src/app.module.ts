@@ -11,6 +11,7 @@ import { QuestionModule } from "./modules/question/question.module";
 import { EventsModule } from "./modules/events/events.module";
 import { TopicModule } from "./modules/topic/topic.module";
 import { GameModule } from "./modules/game/game.module";
+import { GameQuestionAnswerModule } from "./modules/gameQuestionsAnswer/gameQuestionAnswer.module";
 import pino from "pino";
 
 @Module({
@@ -38,13 +39,8 @@ import pino from "pino";
         EventsModule,
         QuestionModule,
         TopicModule,
-        GameModule
+        GameModule,
+        GameQuestionAnswerModule
     ]
-    // controllers: [AppController],
-    // providers: [AppService]
 })
-export class AppModule implements NestModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer.apply(LoggerMiddleware).forRoutes("question");
-    }
-}
+export class AppModule {}

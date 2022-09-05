@@ -11,8 +11,7 @@ import { TopicService } from "../../../src/modules/topic/topic.service";
 import { repositoryMock } from "../../mock/repository.mock";
 import { eventsServiceMock } from "../../mock/eventsService.mock";
 import { TopicController } from "../../../src/modules/topic/topic.controller";
-import { CreateTopicDto } from "../../../src/modules/topic/dto/create-topic.dto";
-import { UpdateTopicDto } from "../../../src/modules/topic/dto/update-topic.dto";
+import { TopicCreateDto, TopicUpdateDto } from "../../../src/modules/topic/dto";
 import { loggerMock } from "../../mock/logger.mock";
 
 describe("Topic", () => {
@@ -61,7 +60,7 @@ describe("Topic", () => {
         return request(app.getHttpServer())
             .get("/topic")
             .expect((res) => {
-                expect(res.body).toMatchObject(topic);
+                expect(res.body).toEqual(topic);
             });
     });
 
@@ -72,7 +71,7 @@ describe("Topic", () => {
 
     test("/POST topic/. Should return 201 if order not exist and have been created", () => {
         const topic: Topic = new Topic();
-        const topicSend: CreateTopicDto = { name: "asd" };
+        const topicSend: TopicCreateDto = { name: "asd" };
         jest.spyOn(repositoryMock, "findOne").mockResolvedValue(topic);
 
         return (
@@ -82,28 +81,26 @@ describe("Topic", () => {
                 // .send(topicSend) // for Body on post
                 .expect(201)
                 .expect((res) => {
-                    expect(res.body).toMatchObject(topic);
+                    expect(res.body).toEqual(topic);
                 })
         );
     });
 
-    test("/POST question/. Should return 400 if send empty body", () => {
-        return request(app.getHttpServer()).post(`/topic`).send({}).expect(400);
-    });
+    test("/POST question/. Should return 400 if send empty body", () =>
+        request(app.getHttpServer()).post(`/topic`).send({}).expect(400));
 
-    test("/POST question/. Should return 400 if send empty body", () => {
-        return request(app.getHttpServer()).post(`/topic`).send({ title: "title", desc: "test" }).expect(400);
-    });
+    test("/POST question/. Should return 400 if send empty body", () =>
+        request(app.getHttpServer()).post(`/topic`).send({ title: "title", desc: "test" }).expect(400));
 
     test("/PATCH question/. Should return 200", () => {
-        const updateTopicDto: UpdateTopicDto = { id: 1, name: "test" };
+        const updateTopicDto: TopicUpdateDto = { id: 1, name: "test" };
         jest.spyOn(repositoryMock, "save").mockResolvedValue(updateTopicDto);
 
         return request(app.getHttpServer())
             .patch(`/topic`)
             .send(updateTopicDto)
             .expect((res) => {
-                expect(res.body).toMatchObject(updateTopicDto);
+                expect(res.body).toEqual(updateTopicDto);
             })
             .expect(200);
     });
@@ -124,19 +121,6 @@ describe("Topic", () => {
         });
 
         return request(app.getHttpServer()).delete(`/topic/11`).expect(404);
-    });
-
-    test("/POST generateBoard/. Should return 201", () => {
-        const mockResult = [1, 2, 3];
-        jest.spyOn(TopicServiceMock, "generateBoard").mockResolvedValue(mockResult);
-
-        return request(app.getHttpServer())
-            .post(`/topic/generateBoard`)
-            .send()
-            .expect((res) => {
-                expect(res.body).toEqual(mockResult);
-            })
-            .expect(201);
     });
 
     afterAll(async () => {

@@ -1,13 +1,20 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, ManyToOne } from "typeorm";
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToMany,
+    JoinTable,
+    ManyToOne,
+    JoinColumn,
+    OneToMany
+} from "typeorm";
 import { Topic } from "../topic/entities/topic.entity";
+import { GameAnswerQuestion } from "../gameQuestionsAnswer/entities/gameAnswerQuestion.entity";
 
 @Entity()
 export class Question {
     @PrimaryGeneratedColumn()
     id: number;
-
-    @Column()
-    title: string;
 
     @Column()
     desc: string;
@@ -19,5 +26,9 @@ export class Question {
     answer: string;
 
     @ManyToOne(() => Topic, (topic) => topic.questions)
-    topic_: Topic;
+    @JoinColumn({ name: "topic_id" })
+    topic: Topic;
+
+    @OneToMany(() => GameAnswerQuestion, (gameAnswerQuestion) => gameAnswerQuestion.question)
+    gameAnswerQuestion: GameAnswerQuestion[];
 }

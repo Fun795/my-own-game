@@ -15,7 +15,13 @@ $ psql -U postgres
 
 $ create database your_database;
 ```
+## Run migration
 
+```bash
+$ npm run build
+
+$ npm run typeorm:run
+```
 ## Running the app
 
 ```bash

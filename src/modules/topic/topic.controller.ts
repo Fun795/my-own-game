@@ -1,10 +1,16 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import { TopicService } from "./topic.service";
-import { CreateTopicDto } from "./dto/create-topic.dto";
-import { UpdateTopicDto } from "./dto/update-topic.dto";
-import { ApiTags } from "@nestjs/swagger";
-import { TopicToQuestionDto } from "./dto/topic.dto";
+import { TopicCreateDto, TopicUpdateDto, TopicToQuestionDto } from "./dto";
+import {
+    ApiBadRequestResponse,
+    ApiCreatedResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiOperation,
+    ApiTags
+} from "@nestjs/swagger";
 import { Topic } from "./entities/topic.entity";
+import { Question } from "../question/question.entity";
 
 @ApiTags("topic")
 @Controller("topic")
@@ -12,42 +18,54 @@ export class TopicController {
     constructor(private readonly topicService: TopicService) {}
 
     @Get()
-    findAll() {
+    @ApiOkResponse()
+    findAll(): Promise<Topic[]> {
         return this.topicService.findAll();
     }
 
     @Get(":id")
-    findOne(@Param("id") id: string) {
-        return this.topicService.findOne(+id);
+    @ApiNotFoundResponse({
+        description: "Topic not found by number id"
+    })
+    @ApiOkResponse()
+    findOne(@Param("id") id: number) {
+        return this.topicService.findOne(id);
     }
 
     @Post()
-    create(@Query() createTopicDto: CreateTopicDto) {
+    @ApiBadRequestResponse({
+        description: "Invalid body params"
+    })
+    @ApiCreatedResponse({
+        description: "Topic created",
+        type: Topic
+    })
+    create(@Query() createTopicDto: TopicCreateDto) {
         return this.topicService.create(createTopicDto);
     }
 
     @Patch()
-    update(@Body() updateTopicDto: UpdateTopicDto) {
+    @ApiNotFoundResponse({
+        description: "Topic not found by number id"
+    })
+    @ApiOkResponse({ description: "Success update" })
+    update(@Body() updateTopicDto: TopicUpdateDto) {
         return this.topicService.update(updateTopicDto);
     }
 
     @Delete(":id")
-    remove(@Param("id") id: string) {
-        return this.topicService.remove(+id);
+    @ApiOperation({ operationId: "removeQuestion" })
+    @ApiNotFoundResponse({
+        description: "Topic not found by number id"
+    })
+    @ApiOkResponse({ description: "Success remove" })
+    remove(@Param("id") id: number) {
+        return this.topicService.remove(id);
     }
 
     @Post("findAllManyTopic")
+    @ApiOkResponse()
     findAllManyTopic(): Promise<Topic[]> {
-        return this.topicService.findAllManyTopic();
-    }
-
-    @Post("manyToMany")
-    manyToMany(@Query() manyToMany: TopicToQuestionDto) {
-        return this.topicService.topicToQuestion(manyToMany);
-    }
-
-    @Post("/generateBoard/")
-    async generateBoard(): Promise<any> {
-        return await this.topicService.generateBoard();
+        return this.topicService.findRandTopics();
     }
 }

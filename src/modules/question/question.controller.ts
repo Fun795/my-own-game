@@ -1,25 +1,35 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 import { QuestionService } from "./question.service";
 import { Question } from "./question.entity";
-import { Response } from "express";
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { QuestionCreateDto, QuestionDto, QuestionIdDto, QuestionReplaceDto } from "./question.entityDto";
-import { EventsService } from "../events/events.service";
-import { isNumber } from "class-validator";
+import {
+    ApiAcceptedResponse,
+    ApiBadRequestResponse,
+    ApiCreatedResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiOperation,
+    ApiTags
+} from "@nestjs/swagger";
+import { QuestionDto, QuestionCreateDto, QuestionIdDto, QuestionUpdateDto } from "./dto";
 
 @ApiTags("question")
 @Controller("question")
 export class QuestionController {
-    constructor(private readonly appService: QuestionService, private eventService: EventsService) {}
+    constructor(private readonly questionService: QuestionService) {}
 
     @Get()
+    @ApiOkResponse({})
     async getAll(): Promise<Question[]> {
-        return await this.appService.findAll();
+        return await this.questionService.findAll();
     }
 
     @Get(":id")
-    async getById(@Param() questionIdDto: QuestionIdDto): Promise<Question> {
-        return await this.appService.findOne(questionIdDto.id);
+    @ApiNotFoundResponse({
+        description: "Question not found by number id"
+    })
+    @ApiOkResponse()
+    async getById(@Param("id") id: number): Promise<QuestionDto> {
+        return await this.questionService.findOne(id);
     }
 
     @Post("")
@@ -31,35 +41,27 @@ export class QuestionController {
         type: Question
     })
     async create(@Body() params: QuestionCreateDto): Promise<QuestionDto> {
-        // if (isNumber(Number(params.topic))) {
-        //     params.topic =  Number(params.topic) ;
-        // }
-
-        const result = await this.appService.create(params);
-
-        this.eventService.sendCreateEvent(result);
-
-        return result;
+        return await this.questionService.create(params);
     }
 
     @Delete(":id")
     @ApiOperation({ operationId: "removeQuestion" })
     @ApiNotFoundResponse({
-        description: "Order not found by number"
+        description: "Question not found by number id"
     })
+    @ApiOkResponse({ description: "Success remove" })
     async delete(@Param("id") id: number): Promise<string> {
-        const status = await this.appService.remove(id);
+        const status = await this.questionService.remove(id);
 
         return `row id - ${status}`;
     }
 
-    @Patch("replace/:id")
-    async replaceById(@Body() questionReplace: QuestionReplaceDto): Promise<Question> {
-        return await this.appService.replace(questionReplace);
-    }
-
-    @Get("/findAllManyTopic/")
-    async findAllManyTopic(): Promise<Question[]> {
-        return await this.appService.findAllManyTopic();
+    @Patch("update/:id")
+    @ApiNotFoundResponse({
+        description: "Question not found by number id"
+    })
+    @ApiOkResponse({ description: "Success update" })
+    async updateById(@Body() questionReplace: QuestionUpdateDto): Promise<QuestionDto> {
+        return await this.questionService.update(questionReplace);
     }
 }

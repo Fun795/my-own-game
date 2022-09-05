@@ -1,11 +1,12 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
 import { Question } from "./question.entity";
-import { QuestionCreateDto, QuestionDto, QuestionReplaceDto } from "./question.entityDto";
+import { QuestionDto, QuestionCreateDto, QuestionUpdateDto } from "./dto";
 import { Topic } from "../topic/entities/topic.entity";
 import { TopicService } from "../topic/topic.service";
+import { EventsService } from "../events/events.service";
 
 @Injectable()
 export class QuestionService {
@@ -15,6 +16,7 @@ export class QuestionService {
         @InjectRepository(Topic)
         private topicRepository: Repository<Topic>,
         private topicService: TopicService,
+        private eventService: EventsService,
         @InjectPinoLogger(QuestionService.name)
         private readonly logger: PinoLogger
     ) {}
@@ -26,7 +28,9 @@ export class QuestionService {
     }
 
     async findOne(id: number): Promise<Question> {
-        const question = await this.questionRepository.findOne({ id });
+        const question = await this.questionRepository.findOne(id, {
+            relations: ["topic"]
+        });
 
         if (!question) {
             throw new NotFoundException("question not found by id");
@@ -35,59 +39,78 @@ export class QuestionService {
         return question;
     }
 
-    async replace(question: QuestionReplaceDto): Promise<Question> {
-        const questionToUpdate = await this.questionRepository.findOne({
-            id: question.id
-        });
+    async findRandQuestionByTopic(topicId: number): Promise<Question[]> {
+        const generator = (topicId, countQuestion: number = 5) => {
+            const pullQuestionPoint = [100, 200, 300, 400, 500];
 
-        const replaced: QuestionDto = Object.assign({}, questionToUpdate, question);
+            if (!Number.isInteger(topicId)) {
+                throw new InternalServerErrorException("topicId not number");
+            }
 
-        await this.questionRepository.save(replaced);
+            let query = "";
 
-        const topicQuestion = await this.topicService.topicToQuestion({
-            idQuest: Number(question.id),
-            idTopic: Number(question.topic_id)
-        });
+            for (const [key, point] of pullQuestionPoint.entries()) {
+                if (key === 0) {
+                    query += `
+                   ( select * from question
+                        where topic_id IN (${topicId}) and "point" = ${point}
+                        order by random()
+                        limit 1
+                    )`;
 
-        if (question.topic_id) {
-            const topic = await this.topicRepository.findOne(question.topic_id);
-            topic.questions = topicQuestion.questions;
-            await this.topicRepository.save(topic);
+                    continue;
+                }
+
+                query += `union
+                 (
+                    select * from question
+                    where topic_id IN (${topicId}) and "point" = ${point}
+                    order by random()
+                    limit 1 
+                )`;
+            }
+
+            return query;
+        };
+
+        const question = await this.questionRepository.query(generator(topicId, 5));
+
+        if (!question) {
+            throw new NotFoundException("question not found by id");
         }
+
+        return question;
+    }
+
+    async update(question: QuestionUpdateDto): Promise<Question> {
+        const questionToUpdate = await this.findOne(question.id);
+
+        if (question.topicId) {
+            questionToUpdate.topic = await this.topicService.findOne(question.topicId);
+        }
+
+        Object.assign(questionToUpdate, question);
+
+        await this.questionRepository.save(questionToUpdate);
 
         return questionToUpdate;
     }
 
-    async findAllManyTopic(): Promise<Question[]> {
-        return await this.questionRepository.find({
-            relations: ["topics"]
-        });
-    }
-
-    async remove(id: number): Promise<number> {
+    async remove(id: number): Promise<void> {
         const deleted = await this.questionRepository.delete(id).then(({ affected }) => affected);
 
         if (!deleted) {
             throw new NotFoundException("Question not found by id");
         }
-
-        return deleted;
     }
 
-    async create(question: QuestionCreateDto): Promise<QuestionDto> {
-        const questionReturn: Question = await this.questionRepository.save(question);
+    async create(questionCreateDto: QuestionCreateDto): Promise<QuestionDto> {
+        questionCreateDto.topic = await this.topicService.findOne(questionCreateDto.topicId);
 
-        const topicQuestion = await this.topicService.topicToQuestion({
-            idQuest: questionReturn.id,
-            idTopic: Number(question.topic_id)
-        });
+        const result = await this.questionRepository.save(questionCreateDto);
 
-        if (question.topic_id) {
-            const topic = await this.topicRepository.findOne(question.topic_id);
-            topic.questions = topicQuestion.questions;
-            await this.topicRepository.save(topic);
-        }
+        // await this.eventService.sendCreateEvent(result);
 
-        return questionReturn;
+        return result;
     }
 }

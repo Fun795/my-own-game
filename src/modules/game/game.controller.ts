@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { GameService } from "./game.service";
-import { CreateGameDto } from "./dto/create-game.dto";
-import { UpdateGameDto } from "./dto/update-game.dto";
+import { CreateGameDto, GameDto, GameFindAllDto } from "./dto";
 import { ApiTags } from "@nestjs/swagger";
+import { QuestionCheckDto } from "../question/dto";
+import { mapGameToGameDto } from "./mapper/game.mapper";
 
 @ApiTags("game")
 @Controller("game")
@@ -10,27 +11,31 @@ export class GameController {
     constructor(private readonly gameService: GameService) {}
 
     @Post()
-    create(@Body() createGameDto: CreateGameDto) {
-        return this.gameService.create(createGameDto);
+    create(): Promise<CreateGameDto> {
+        return this.gameService.create();
     }
 
     @Get()
-    findAll() {
-        return this.gameService.findAll();
+    async findAll(): Promise<GameFindAllDto[]> {
+        return await this.gameService.findAll();
     }
-    //
-    // @Get(":id")
-    // findOne(@Param("id") id: string) {
-    //     return this.gameService.findOne(+id);
-    // }
-    //
-    // @Patch(":id")
-    // update(@Param("id") id: string, @Body() updateGameDto: UpdateGameDto) {
-    //     return this.gameService.update(+id, updateGameDto);
-    // }
-    //
-    // @Delete(":id")
-    // remove(@Param("id") id: string) {
-    //     return this.gameService.remove(+id);
-    // }
+
+    @Get(":id") async findOne(@Param("id") id: number): Promise<GameDto> {
+        const game = await this.gameService.findOne(id);
+        return mapGameToGameDto(game);
+    }
+
+    @Post("sendAnswer")
+    sendAnswer(@Body() parameter: QuestionCheckDto): Promise<boolean> {
+        return this.gameService.sendAnswer(parameter);
+    }
+    @Post("test")
+    test() {
+        return this.gameService.test();
+    }
+
+    @Post("/generateBoard/")
+    async generateBoard(): Promise<any> {
+        return await this.gameService.generateBoard();
+    }
 }
