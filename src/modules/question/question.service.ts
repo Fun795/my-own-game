@@ -47,15 +47,20 @@ export class QuestionService {
                 throw new InternalServerErrorException("topicId not number");
             }
 
-            let query = `
+            let query = "";
+
+            for (const [key, point] of pullQuestionPoint.entries()) {
+                if (key === 0) {
+                    query += `
                    ( select * from question
-                        where topic_id IN (${topicId}) and "point" = ${pullQuestionPoint[0]}
+                        where topic_id IN (${topicId}) and "point" = ${point}
                         order by random()
                         limit 1
-                        )
-            `;
+                    )`;
 
-            pullQuestionPoint.forEach((point) => {
+                    continue;
+                }
+
                 query += `union
                  (
                     select * from question
@@ -63,7 +68,7 @@ export class QuestionService {
                     order by random()
                     limit 1 
                 )`;
-            });
+            }
 
             return query;
         };
