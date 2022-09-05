@@ -17,11 +17,11 @@ export class TopicService {
         private readonly logger: PinoLogger
     ) {}
 
-    async create(createTopicDto: TopicCreateDto) {
+    async create(createTopicDto: TopicCreateDto): Promise<Topic> {
         return await this.topicRepository.save(createTopicDto);
     }
 
-    async findRandTopics(count: number = 1): Promise<Topic[]> {
+    async findRandTopics(count = 1): Promise<Topic[]> {
         return await this.topicRepository
             .createQueryBuilder("topic")
             .select("id")
@@ -30,8 +30,8 @@ export class TopicService {
             .execute();
     }
 
-    findAll() {
-        return this.topicRepository.find();
+    async findAll(): Promise<Topic[]> {
+        return await this.topicRepository.find();
     }
 
     async findOne(id: number): Promise<Topic> {
