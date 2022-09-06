@@ -86,8 +86,8 @@ export class GameService {
         const randFiveTopic = await this.topicService.findRandTopics(5);
 
         for (const { id } of randFiveTopic) {
-            const Questions: Question[] = await this.questionService.findRandQuestionByTopic(id);
-            questions.push(...Questions);
+            const questions: Question[] = await this.questionService.findRandQuestionByTopic(id);
+            questions.push(...questions);
         }
 
         return questions;
