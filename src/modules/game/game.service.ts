@@ -27,6 +27,10 @@ export class GameService {
 
     async create(): Promise<CreateGameDto> {
         const game = this.gameRepository.create();
+        
+        class A {
+            _foo: "1";
+        }
         const questions = await this.generateBoard();
 
         game.gameAnswerQuestion = mapQuestionToAnswerQuestionDto(questions, game.id);

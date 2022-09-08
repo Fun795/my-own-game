@@ -28,9 +28,6 @@ export class QuestionModelGenerator extends Question {
         this.gameAnswerQuestion = value;
         return this;
     }
-    save() {
-        return jest.fn();
-    }
 
     static empty(): QuestionModelGenerator {
         return new QuestionModelGenerator();
