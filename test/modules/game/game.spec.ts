@@ -6,6 +6,7 @@ import { GameModelGenerator } from "./generator/gameModelGenerator";
 import { GameAnswerQuestionModelGenerator } from "./generator/gameAnswerQuestionGenerator";
 import { QuestionCheckDtoGenerator } from "./generator/questionCheckDtoGenerator";
 import { providers } from "../../game.providers";
+import { QuestionModelGenerator } from "./generator/questionModelGenerator";
 
 let gameService: GameService;
 
@@ -55,6 +56,19 @@ describe("Game send answer", () => {
             await expect(gameServiceMock.sendAnswer(questionCheckDto)).rejects.toThrow(
                 "This question has already been answered"
             );
+        });
+        test("if validation is ok, the method should return the result of the response", async () => {
+            game.withGameAnswerQuestion([
+                GameAnswerQuestionModelGenerator.default().withQuestion(
+                    QuestionModelGenerator.default().withAnswer("успех")
+                )
+            ]);
+
+            jest.spyOn(gameServiceMock, "findOne").mockResolvedValue(game);
+            const questionCheckDto = QuestionCheckDtoGenerator.default().withAnswer("успех");
+            const result = await gameServiceMock.sendAnswer(questionCheckDto);
+
+            expect(result).toBe(true);
         });
     });
 });
