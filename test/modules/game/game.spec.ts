@@ -1,93 +1,60 @@
-import * as request from "supertest";
 import { Test } from "@nestjs/testing";
 import { GameService } from "../../../src/modules/game/game.service";
-import { GameController } from "../../../src/modules/game/game.controller";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
-//import { mockGameModel as fakeGameModel } from "./mock/GameModelMock";
-import { getRepositoryToken } from "@nestjs/typeorm";
-import { getLoggerToken, PinoLogger } from "nestjs-pino";
-// import { EventsService } from "../../../src/modules/events/events.service";
-import { Game } from "../../../src/modules/game/entities/game.entity";
-import { repositoryMock } from "../../mock/repository.mock";
-import { Topic } from "../../../src/modules/topic/entities/topic.entity";
-import { TopicService } from "../../../src/modules/topic/topic.service";
-import { Question } from "../../../src/modules/question/question.entity";
-import { GameQuestionAnswerService } from "../../../src/modules/gameQuestionsAnswer/game-question-answer.service";
-import { QuestionService } from "../../../src/modules/question/question.service";
-import { loggerMock } from "../../mock/logger.mock";
-import { EventsService } from "../../../src/modules/events/events.service";
-import { eventsServiceMock } from "../../mock/eventsService.mock";
-// import { eventsServiceMock } from "../../mock/eventsService.mock";
-import { GameAnswerQuestion } from "../../../src/modules/gameQuestionsAnswer/entities/gameAnswerQuestion.entity";
+import { GameStatus } from "../../../src/modules/game/enums/statusGameEnum";
+import { GameModelGenerator } from "./generator/gameModelGenerator";
+import { GameAnswerQuestionModelGenerator } from "./generator/gameAnswerQuestionGenerator";
+import { QuestionCheckDtoGenerator } from "./generator/questionCheckDtoGenerator";
+import { providers } from "../../game.providers";
 
 let gameService: GameService;
 
-describe("Game", () => {
+describe("Game send answer", () => {
     let app: INestApplication;
     let gameServiceMock: GameService;
-
-    beforeAll(async () => {
-        const moduleRef = await Test.createTestingModule({
-            controllers: [GameController],
-            providers: [
-                GameService,
-                {
-                    provide: QuestionService,
-                    useValue: {
-                        findOne: jest.fn()
-                    }
-                },
-                {
-                    provide: TopicService,
-                    useValue: {
-                        topicToQuestion() {
-                            return { questions: [new Question()] };
-                        },
-                        findOne: jest.fn()
-                    }
-                },
-                {
-                    provide: GameQuestionAnswerService,
-                    useValue: {
-                        findOne: jest.fn()
-                    }
-                },
-                {
-                    provide: getRepositoryToken(Game),
-                    useValue: repositoryMock
-                },
-                {
-                    provide: getRepositoryToken(GameAnswerQuestion),
-                    useValue: repositoryMock
-                },
-                {
-                    provide: getLoggerToken(GameService.name), //provide: "PinoLogger:QuestionService",
-                    useValue: loggerMock
-                }
-            ]
-        }).compile();
+    let game: GameModelGenerator;
+    beforeEach(async () => {
+        const moduleRef = await Test.createTestingModule(providers).compile();
 
         app = moduleRef.createNestApplication();
         app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
-        gameServiceMock = await app.resolve(GameService);
-        await app.init();
-        gameService = moduleRef.get<GameService>(GameService);
-    });
-    test("game create", () => {
-        const game = gameServiceMock.create();
-        expect(game).toBe(2);
-    });
 
-    // test("/POST generateBoard/. Should return 201", () => {
-    //     const mockResult = [new Question()];
-    //     jest.spyOn(gameServiceMock, "generateBoard").mockResolvedValue(mockResult);
-    //
-    //     return request(app.getHttpServer())
-    //         .post(`/game/generateBoard`)
-    //         .send()
-    //         .expect((res) => {
-    //             expect(res.body).toEqual(mockResult);
-    //         })
-    //         .expect(201);
-    // });
+        gameServiceMock = await app.resolve(GameService);
+
+        gameService = moduleRef.get<GameService>(GameService);
+        game = GameModelGenerator.default();
+    });
+    describe("Game test throw validation", () => {
+        test("If The game you want to answer is already finish", async () => {
+            game.withStatus(GameStatus.Finished);
+            jest.spyOn(gameServiceMock, "findOne").mockResolvedValue(game);
+
+            const questionCheckDto = QuestionCheckDtoGenerator.default();
+
+            await expect(gameServiceMock.sendAnswer(questionCheckDto)).rejects.toThrow(
+                "The game you want to answer is already finish"
+            );
+        });
+
+        test("If Question is not included in game", async () => {
+            jest.spyOn(gameServiceMock, "findOne").mockResolvedValue(game);
+
+            const questionCheckDto = QuestionCheckDtoGenerator.default().withQuestionAnswerId(3);
+
+            await expect(gameServiceMock.sendAnswer(questionCheckDto)).rejects.toThrow(
+                "Question is not included in this game"
+            );
+        });
+
+        test("If this question has already been answered", async () => {
+            game.withGameAnswerQuestion([GameAnswerQuestionModelGenerator.default().withQuestionAsked(true)]);
+            jest.spyOn(gameServiceMock, "findOne").mockResolvedValue(game);
+
+            const questionCheckDto = QuestionCheckDtoGenerator.default();
+
+            await expect(gameServiceMock.sendAnswer(questionCheckDto)).rejects.toThrow(
+                "This question has already been answered"
+            );
+        });
+    });
 });

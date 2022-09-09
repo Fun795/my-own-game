@@ -10,7 +10,7 @@ import { QuestionService } from "../question/question.service";
 import { NotAcceptableException } from "@nestjs/common/exceptions/not-acceptable.exception";
 import { GameStatus } from "./enums/statusGameEnum";
 import { CreateGameDto, GameFindAllDto } from "./dto";
-import { mapGameToGameCreateDto, mapGameToGameFindAllDto, mapQuestionToAnswerQuestionDto } from "./mapper/game.mapper";
+import { mapGameToGameFindAllDto, mapQuestionToAnswerQuestionDto } from "./mapper/game.mapper";
 import { QuestionCheckDto } from "../question/dto";
 
 @Injectable()
@@ -27,6 +27,7 @@ export class GameService {
 
     async create(): Promise<CreateGameDto> {
         const game = this.gameRepository.create();
+
         const questions = await this.generateBoard();
 
         game.gameAnswerQuestion = mapQuestionToAnswerQuestionDto(questions, game.id);
@@ -86,16 +87,10 @@ export class GameService {
         const randFiveTopic = await this.topicService.findRandTopics(5);
 
         for (const { id } of randFiveTopic) {
-            const QR: Question[] = await this.questionService.findRandQuestionByTopic(id);
-            questions.push(...QR);
+            const questions: Question[] = await this.questionService.findRandQuestionByTopic(id);
+            questions.push(...questions);
         }
 
         return questions;
-    }
-
-    async test() {
-        return await this.gameRepository.findOne({
-            relations: ["gameAnswerQuestion"]
-        });
     }
 }
