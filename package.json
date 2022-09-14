@@ -50,7 +50,7 @@
     "typeorm": "0.2.45"
   },
   "devDependencies": {
-    "@byndyusoft/eslint-config": "0.4.0",
+    "@byndyusoft/eslint-config": "2.0.0",
     "@nestjs/cli": "^8.2.3",
     "@nestjs/schematics": "^8.0.11",
     "@nestjs/testing": "^8.2.3",
@@ -62,7 +62,7 @@
     "@types/validator": "^13.7.5",
     "@typescript-eslint/eslint-plugin": "^5.7.0",
     "@typescript-eslint/parser": "^5.7.0",
-    "eslint": "^7.32.0",
+    "eslint": "^8.22.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-jest": "^25.3.0",
