@@ -1,10 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, OneToMany, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, OneToMany } from "typeorm";
 import { GameStatus } from "../enums/statusGameEnum";
 import { GameAnswerQuestion } from "../../gameQuestionsAnswer/entities/gameAnswerQuestion.entity";
-import { Question } from "../../question/question.entity";
-import { QuestionCheckDto } from "../../question/dto";
-import { ResultAnswerDto } from "../../gameQuestionsAnswer/dto/addGameAnswerQuestion.dto";
-import { NotAcceptableException } from "@nestjs/common/exceptions/not-acceptable.exception";
 
 @Entity()
 export class Game {

@@ -3,15 +3,6 @@ import { CreateGameDto, GameDto, GameFindAllDto } from "../dto";
 import { Question } from "../../question/question.entity";
 import { GameAnswerQuestion } from "../../gameQuestionsAnswer/entities/gameAnswerQuestion.entity";
 
-export function mapGameToGameCreateDto(game: Game): CreateGameDto {
-    const createdGameDto: GameDto = new GameDto();
-
-    createdGameDto.id = game.id;
-    createdGameDto.status = game.status;
-
-    return createdGameDto;
-}
-
 export function mapGameToGameFindAllDto(gameArray: Game[]): GameFindAllDto[] {
     return gameArray.map((elem) => ({
         id: elem.id,

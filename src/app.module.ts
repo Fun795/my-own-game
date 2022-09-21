@@ -1,11 +1,8 @@
-import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
-// import { AppController } from "./app.controller";
-// import { AppService } from "./app.service";
+import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import ormconfig from "src/ormconfig";
 import { LoggerModule } from "nestjs-pino";
-import { LoggerMiddleware } from "./common/middleware/logger.middleware";
 import config from "./config";
 import { QuestionModule } from "./modules/question/question.module";
 import { EventsModule } from "./modules/events/events.module";

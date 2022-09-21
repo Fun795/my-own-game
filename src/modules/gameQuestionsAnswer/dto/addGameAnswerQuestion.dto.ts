@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsBoolean } from "class-validator";
+import { IsInt } from "class-validator";
 import { Question } from "../../question/question.entity";
 
 export class CreateGameAnswerQuestionDto {
